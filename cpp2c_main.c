@@ -4,11 +4,29 @@
 #include "rectangle.h"
 /*#include "circle.h"*/
 
+void Draw_Shape_Glob(struct Shape* obj) 
+{ 
+	((struct Rectangle*)obj)->m_tbl->Scale_Dbl_ptr((struct Rectangle*)obj, 2);		
+	obj->m_tbl->Draw_ptr(obj);	
+}
+
+double DrawBig_Shape_Glob(struct Shape* obj)
+{
+	double a0 = obj->m_tbl->Area_ptr(obj);
+	((struct Rectangle*)obj)->m_tbl->Scale_ptr((struct Rectangle*)obj);	
+	double a1 = obj->m_tbl->Area_ptr(obj);
+	return a1 - a0;
+}
+
 int main(int argc, char **argv, char **envp)
 {	
  	struct Rectangle r;
 	puts("+++ Before Rectangle s");
 	Rectangle_CTOR_int(&r, 4);
+
+	puts("+++ Draw/DrawBig(r)");
+	Draw_Shape_Glob((struct Shape*) &r);
+	DrawBig_Shape_Glob((struct Shape*) &r);
 
     return 0;
 }
@@ -19,12 +37,6 @@ void Report(const Shape& s)
 	puts("-----report-----");
 	s.Draw(); 
 	Shape::PrintInventory();
-}
-
-inline void Draw(Shape& obj) 
-{ 
-	obj.Scale(2);
-	obj.Draw();	
 }
 
 void Draw(Circle c) 
@@ -61,13 +73,7 @@ double DrawBig(T& shape)
 	return a1 - a0;
 }
 
-inline double DrawBig(Shape &shape)
-{
-	double a0 = shape.Area();
-	shape.Scale(3.14);
-	double a1 = shape.Area();
-	return a1 - a0;
-}
+
 
 int main(int argc, char **argv, char **envp)
 {	

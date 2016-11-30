@@ -18,12 +18,21 @@ inline Scaleable::~Scaleable()
 */
 
 struct Scaleable
-{};
+{
+	struct Scaleable_VTbl* m_tbl;
+};
+
+struct Scaleable_VTbl
+{
+	void(*Scale_ptr)(struct Scaleable*);
+	void(*Scale_Dbl_ptr)(struct Scaleable*, double f);
+};
 
 void Scaleable_CTOR(struct Scaleable* _this);
 
 void Scaleable_DTOR(struct Scaleable* _this);
 
-/*void Scale(struct Scalable* _this, double f = 2.0);*/
+void Scaleable_Scale_Sclbl(struct Scaleable*);
+void Scaleable_Scale_SclblDbl(struct Scaleable*, double f);
 
 #endif

@@ -3,6 +3,7 @@
 /*#include "color.h"*/
 
 static int s_numOfShapes = 0;
+static struct Shape_VTbl tbl = {Shape_DTOR, Shape_Draw, Shape_Scale, Shape_Area};
 
 void Shape_CTOR(struct Shape* _this)
 {
@@ -12,12 +13,27 @@ void Shape_CTOR(struct Shape* _this)
 	_this->m_me = _this;
 	printf("    [%d] Shape::CTOR\n", _this->m_id);
 	Shape_Draw(_this);
+	_this->m_tbl = &tbl;
+}
+
+void Shape_DTOR(struct Shape* _this)
+{
+	_this->m_tbl->DTOR_ptr(_this);
+	printf("    [%d] Shape::DTOR\n", _this->m_id);
+	s_numOfShapes; 
 }
 
 void Shape_Draw(struct Shape* _this)
 {
 	printf("    [%d] Shape::Draw()\n", _this->m_id);
 }
+
+void Shape_Scale(struct Shape* _this, double x)
+{
+	printf("    [%d] Shape::Scale(double)\n", _this->m_id);
+}
+
+double Shape_Area(struct Shape* _this){}
 
 /*
 int Shape::s_numOfShapes = 0;

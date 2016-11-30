@@ -1,11 +1,14 @@
 #include "rectangle.h"
 
+static struct Rectangle_VTbl tbl = {Rectangle_Scale, Rectangle_Scale_Dbl, Rectangle_Area};
+
 void Rectangle_CTOR(struct Rectangle* _this)
-{
+{	
 	Shape_CTOR((struct Shape*)_this);	
 	_this->m_a = 16;
 	_this->m_b = 16;
 	 printf("    [%d] Rectangle::CTOR(int) -> a:%d/%d\n", ((struct Shape*)_this)->m_id, _this->m_a, _this->m_b);
+	_this->m_tbl = &tbl;
 }
 
 void Rectangle_CTOR_int(struct Rectangle* _this, int a)
@@ -14,6 +17,24 @@ void Rectangle_CTOR_int(struct Rectangle* _this, int a)
 	_this->m_a = a;
 	_this->m_b = a;
 	 printf("    [%d] Rectangle::CTOR(int) -> a:%d/%d\n", ((struct Shape*)_this)->m_id, _this->m_a, _this->m_b);
+	_this->m_tbl = &tbl;
+}
+
+double Rectangle_Area(struct Rectangle* _this)
+{
+	return _this->m_a * _this->m_b;
+}
+
+void Rectangle_Scale(struct Rectangle* _this)
+{
+	_this->m_a *= 5;
+	_this->m_b *= 5;
+}
+
+void Rectangle_Scale_Dbl(struct Rectangle* _this, double f)
+{
+	_this->m_a *= f;
+	_this->m_b *= f;
 }
 /*
 Rectangle::Rectangle(int a)
