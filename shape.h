@@ -53,6 +53,7 @@ struct Shape* Shape_Operator_Assn(struct Shape* _this, const struct Shape* _othe
 void Shape_Draw(struct Shape* _this);
 void Shape_Scale(struct Shape* _this, double x);
 double Shape_Area(struct Shape* _this);
+void Shape_PrintInventory();
 
 #endif
 

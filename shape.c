@@ -35,6 +35,11 @@ void Shape_Scale(struct Shape* _this, double x)
 
 double Shape_Area(struct Shape* _this){}
 
+void Shape_PrintInventory()
+{
+	printf("Shape::printInventory - %d\n", s_numOfShapes);
+}
+
 /*
 int Shape::s_numOfShapes = 0;
 

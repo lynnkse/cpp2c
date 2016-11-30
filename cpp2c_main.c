@@ -28,6 +28,9 @@ int main(int argc, char **argv, char **envp)
 	Draw_Shape_Glob((struct Shape*) &r);
 	DrawBig_Shape_Glob((struct Shape*) &r);
 
+	puts("+++ PrintInventory");
+    Shape_PrintInventory();
+
     return 0;
 }
 
