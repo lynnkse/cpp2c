@@ -2,7 +2,7 @@
 #include "scaleable.h"
 #include "shape.h"
 #include "rectangle.h"
-/*#include "circle.h"*/
+#include "circle.h"
 
 void Draw_Shape_Glob(struct Shape* obj) 
 { 
@@ -12,10 +12,18 @@ void Draw_Shape_Glob(struct Shape* obj)
 
 double DrawBig_Shape_Glob(struct Shape* obj)
 {
-	double a0 = obj->m_tbl->Area_ptr(obj);
+	double a0;
+	double a1;
+	a0 = ((struct Rectangle*)obj)->m_tbl->Area_ptr((struct Rectangle*)obj);
 	((struct Rectangle*)obj)->m_tbl->Scale_ptr((struct Rectangle*)obj);	
-	double a1 = obj->m_tbl->Area_ptr(obj);
+	a1 = ((struct Rectangle*)obj)->m_tbl->Area_ptr((struct Rectangle*)obj);
 	return a1 - a0;
+}
+
+void Rescale_Sclbl(struct Scaleable* sc) 
+{
+	((struct Circle*)sc)->m_tbl->Scale_ptr((struct Circle*)sc);
+	((struct Circle*)sc)->m_tbl->Scale_Dbl_ptr((struct Circle*)sc, 3.14);
 }
 
 int main(int argc, char **argv, char **envp)
@@ -30,6 +38,16 @@ int main(int argc, char **argv, char **envp)
 
 	puts("+++ PrintInventory");
     Shape_PrintInventory();
+
+	puts("+++ Circle c2");
+	struct Circle c2;
+	Circle_Dbl_CTOR(&c2, 17);
+	Circle_PrintInventory();
+	puts("+++ Circle c2 Rescale");
+	Rescale_Sclbl((struct Scaleable*)&c2);
+	c2.m_tbl->Draw_ptr(&c2);
+	/*c2.Draw();*/
+	/*DrawBig(c2);*/
 
     return 0;
 }
@@ -106,7 +124,7 @@ int main(int argc, char **argv, char **envp)
 
 	puts("+++ Circle c2");
     Circle c2(17);
-    c2.PrintInventory();
+    c2.PrintInventory(); 
 	puts("+++ Circle c2 Rescale");
 	Rescale(&c2);
 	c2.Draw();

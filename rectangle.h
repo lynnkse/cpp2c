@@ -36,6 +36,7 @@ struct Rectangle_VTbl
 
 void Rectangle_CTOR(struct Rectangle* _this);
 void Rectangle_CTOR_int(struct Rectangle* _this, int a);
+void Rectangle_CTOR_int_int(struct Rectangle* _this, int a, int b);
 double Rectangle_Area(struct Rectangle* _this);
 void Rectangle_Scale(struct Rectangle* _this);
 void Rectangle_Scale_Dbl(struct Rectangle*, double f);

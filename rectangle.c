@@ -20,6 +20,15 @@ void Rectangle_CTOR_int(struct Rectangle* _this, int a)
 	_this->m_tbl = &tbl;
 }
 
+void Rectangle_CTOR_int_int(struct Rectangle* _this, int a, int b)
+{
+	Shape_CTOR((struct Shape*)_this);	
+	_this->m_a = a;
+	_this->m_b = b;
+	 printf("    [%d] Rectangle::CTOR(int) -> a:%d/%d\n", ((struct Shape*)_this)->m_id, _this->m_a, _this->m_b);
+	_this->m_tbl = &tbl;
+}
+
 double Rectangle_Area(struct Rectangle* _this)
 {
 	return _this->m_a * _this->m_b;
