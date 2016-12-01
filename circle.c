@@ -30,18 +30,26 @@ void Circle_Dbl_CTOR(struct Circle* _this, double r)
 	_this->m_tbl = &tbl;	
 }
 
-void Circle_DTOR(struct Circle* _this){}
+void Circle_DTOR(struct Circle* _this)
+{
+	printf("    [%d] Circle::DTOR ->  m_radius:%f\n", ((struct Shape*)_this)->m_id, _this->m_radius); 
+	Shape_Draw(((struct Shape*)_this)->m_me);
+	printf("    [%d] Circle::DTOR ->  m_radius:%f\n", ((struct Shape*)_this)->m_id, _this->m_radius); 	
+		
+	Shape_DTOR((struct Shape*)_this);
+	Scaleable_DTOR((struct Scaleable*)_this);
+}
 
 void Circle_Scale(struct Circle* _this)
 {
 	_this->m_radius *= 2.5;
-	Rectangle_Scale_Dbl(&(_this->m_boundingBox), 2.5);
+	Rectangle_Scale_Dbl(&(_this->m_boundingBox), 2.5/2);
 }
 
 void Circle_Scale_Dbl(struct Circle* _this, double x)
 {
 	_this->m_radius *= x;
-	Rectangle_Scale_Dbl(&(_this->m_boundingBox), x);
+	Rectangle_Scale_Dbl(&(_this->m_boundingBox), x/2);
 }
 
 double Circle_Area(struct Circle* _this)

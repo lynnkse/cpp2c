@@ -20,9 +20,10 @@ void Shape_CTOR(struct Shape* _this)
 
 void Shape_DTOR(struct Shape* _this)
 {
-	_this->m_tbl->DTOR_ptr(_this);
+	Shape_Draw(_this->m_me);
 	printf("    [%d] Shape::DTOR\n", _this->m_id);
 	--Shape_s_numOfShapes; 
+	Scaleable_DTOR((struct Scaleable*)_this);
 }
 
 void Shape_Draw(struct Shape* _this)
@@ -46,6 +47,9 @@ void Shape_PrintInventory()
 {
 	printf("Shape::printInventory - %d\n", Shape_s_numOfShapes);
 }
+
+struct Shape* Shape_Operator_Assn(struct Shape* _this, const struct Shape* _other)
+{}
 
 /*
 int Shape::Shape_s_numOfShapes = 0;

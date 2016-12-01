@@ -58,15 +58,22 @@ void Draw_Crcl_Glob_int(struct Circle* c, int scale)
 	/*printf("COLOR: %d\n", c.GetColor()); TODO color*/
 }
 
+void Report_Glob_Shape(struct Shape* s) 
+{
+	puts("-----report-----");
+	s->m_tbl->Draw_ptr(s);
+	Shape_PrintInventory();
+}
+
 int main(int argc, char **argv, char **envp)
 {	
  	struct Rectangle r;
+	struct Circle c;
 	puts("+++ Before Rectangle s");
 	Rectangle_CTOR_int(&r, 4);
 
 	if (argc > 0) 
 	{
-		struct Circle c;
 		Circle_CTOR(&c);
 		puts("+++ Draw(c) X 2");
 		Draw_Crcl_Glob(c);
@@ -76,9 +83,9 @@ int main(int argc, char **argv, char **envp)
 		Draw_Crcl_Glob_int(&c, 4);
 		Draw_Crcl_Glob_int(&c, 8);
 		
-		/*Report(c);
+		Report_Glob_Shape(&c);
 	
-		r = c;*/
+		Shape_Operator_Assn(&r, &c);
 	}
 
 	puts("+++ Draw/DrawBig(r)");
@@ -98,7 +105,9 @@ int main(int argc, char **argv, char **envp)
 	DrawBig_Shape_Glob((struct Shape*)&c2);
 
 	puts("+++ Exiting Main");
-    return 0;
+
+	r.m_tbl->DTOR_ptr(&r);
+	c.m_tbl->DTOR_ptr(&c);
 
     return 0;
 }
