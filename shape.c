@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include "shape.h"
 #include "scaleable.h"
-/*#include "color.h"*/
+#include "color.h"
 
-int Shape_s_numOfShapes = 0; /*FIXME Shape_...; add extern in .h*/
+int Shape_s_numOfShapes = 0;
 static struct Shape_VTbl tbl = {Shape_Scale, Shape_Scale_Dbl, Shape_DTOR, Shape_Draw, 0};
 
 void Shape_CTOR(struct Shape* _this)

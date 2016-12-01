@@ -68,13 +68,13 @@ void Report_Glob_Shape(struct Shape* s)
 
 int main(int argc, char **argv, char **envp)
 {	
- 	struct Rectangle r;
-	struct Circle c;
 	puts("+++ Before Rectangle s");
+ 	struct Rectangle r;
 	Rectangle_CTOR_int(&r, 4);
 
 	if (argc > 0) 
 	{
+		struct Circle c;		
 		Circle_CTOR(&c);
 		puts("+++ Draw(c) X 2");
 		Draw_Crcl_Glob(c);

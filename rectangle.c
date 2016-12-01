@@ -1,6 +1,7 @@
 #include "rectangle.h"
+#include "color.h"
 
-static struct Rectangle_VTbl tbl = {Rectangle_Scale, Rectangle_Scale_Dbl, Rectangle_DTOR, Shape_Draw/*TODO implement its own func*/, Rectangle_Area};
+static struct Rectangle_VTbl tbl = {Rectangle_Scale, Rectangle_Scale_Dbl, Rectangle_DTOR, Rectangle_Draw, Rectangle_Area};
 
 void Rectangle_CTOR(struct Rectangle* _this)
 {	
@@ -55,6 +56,12 @@ void Rectangle_DTOR(struct Rectangle* _this)
 	printf("    [%d] Rectangle::DTOR -> a:%d/%d\n", ((struct Shape*)_this)->m_id, _this->m_a, _this->m_b);
 	Shape_DTOR((struct Shape*)_this);
 }
+
+void Rectangle_Draw(struct Rectangle* _this, enum ColorEnum c)
+{
+	printf("    [%d] Rectangle::Draw(%d) -> a:%d/%d\n",  ((struct Shape*)_this)->m_id, c, _this->m_a, _this->m_b);
+}
+
 /*
 Rectangle::Rectangle(int a)
 	: m_a(a), m_b(a) 

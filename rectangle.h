@@ -43,6 +43,7 @@ void Rectangle_DTOR(struct Rectangle* _this);
 double Rectangle_Area(struct Rectangle* _this);
 void Rectangle_Scale(struct Rectangle* _this);
 void Rectangle_Scale_Dbl(struct Rectangle*, double f);
+void Rectangle_Draw(struct Rectangle* _this, enum ColorEnum c);
 
 
 #endif
