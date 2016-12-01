@@ -8,8 +8,9 @@ struct Circle_VTbl
 {
 	void(*Scale_ptr)(struct Circle*);	
 	void(*Scale_Dbl_ptr)(struct Circle*, double);
-	double(*Area_ptr)(struct Circle*);	
+	void(*DTOR_ptr)(struct Shape*);
 	void(*Draw_ptr)(struct Circle*);
+	double(*Area_ptr)(struct Circle*);	
 };
 
 struct Circle

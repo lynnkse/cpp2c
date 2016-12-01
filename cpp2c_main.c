@@ -6,7 +6,7 @@
 
 void Draw_Shape_Glob(struct Shape* obj) 
 { 
-	((struct Rectangle*)obj)->m_tbl->Scale_Dbl_ptr((struct Rectangle*)obj, 2);		
+	(obj)->m_tbl->Scale_Dbl_ptr(obj, 2);		
 	obj->m_tbl->Draw_ptr(obj);	
 }
 
@@ -14,16 +14,16 @@ double DrawBig_Shape_Glob(struct Shape* obj)
 {
 	double a0;
 	double a1;
-	a0 = ((struct Rectangle*)obj)->m_tbl->Area_ptr((struct Rectangle*)obj);
-	((struct Rectangle*)obj)->m_tbl->Scale_ptr((struct Rectangle*)obj);	
-	a1 = ((struct Rectangle*)obj)->m_tbl->Area_ptr((struct Rectangle*)obj);
+	a0 = (obj)->m_tbl->Area_ptr(obj);
+	(obj)->m_tbl->Scale_ptr(obj);	
+	a1 = (obj)->m_tbl->Area_ptr(obj);
 	return a1 - a0;
 }
 
 void Rescale_Sclbl(struct Scaleable* sc) 
 {
-	((struct Circle*)sc)->m_tbl->Scale_ptr((struct Circle*)sc);
-	((struct Circle*)sc)->m_tbl->Scale_Dbl_ptr((struct Circle*)sc, 3.14);
+	(sc)->m_tbl->Scale_ptr(sc);
+	(sc)->m_tbl->Scale_Dbl_ptr(sc, 3.14);
 }
 
 int main(int argc, char **argv, char **envp)
@@ -46,7 +46,7 @@ int main(int argc, char **argv, char **envp)
 	puts("+++ Circle c2 Rescale");
 	Rescale_Sclbl((struct Scaleable*)&c2);
 	c2.m_tbl->Draw_ptr(&c2);
-	/*c2.Draw();*/
+	DrawBig_Shape_Glob((struct Shape*)&c2);
 	/*DrawBig(c2);*/
 
     return 0;

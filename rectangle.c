@@ -1,6 +1,6 @@
 #include "rectangle.h"
 
-static struct Rectangle_VTbl tbl = {Rectangle_Scale, Rectangle_Scale_Dbl, Rectangle_Area};
+static struct Rectangle_VTbl tbl = {Rectangle_Scale, Rectangle_Scale_Dbl, Rectangle_DTOR, 0, Rectangle_Area};
 
 void Rectangle_CTOR(struct Rectangle* _this)
 {	
@@ -8,6 +8,8 @@ void Rectangle_CTOR(struct Rectangle* _this)
 	_this->m_a = 16;
 	_this->m_b = 16;
 	 printf("    [%d] Rectangle::CTOR(int) -> a:%d/%d\n", ((struct Shape*)_this)->m_id, _this->m_a, _this->m_b);
+	((struct Scaleable*)_this)->m_tbl = &tbl;
+	((struct Shape*)_this)->m_tbl = &tbl;
 	_this->m_tbl = &tbl;
 }
 
@@ -17,6 +19,8 @@ void Rectangle_CTOR_int(struct Rectangle* _this, int a)
 	_this->m_a = a;
 	_this->m_b = a;
 	 printf("    [%d] Rectangle::CTOR(int) -> a:%d/%d\n", ((struct Shape*)_this)->m_id, _this->m_a, _this->m_b);
+	((struct Scaleable*)_this)->m_tbl = &tbl;
+	((struct Shape*)_this)->m_tbl = &tbl;
 	_this->m_tbl = &tbl;
 }
 

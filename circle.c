@@ -3,7 +3,7 @@
 #include "shape.h"
 
 static int s_numOfShapes = 10;
-static struct Circle_VTbl tbl = {Circle_Scale, Circle_Scale_Dbl, Circle_Area, Circle_Draw};
+static struct Circle_VTbl tbl = {Circle_Scale, Circle_Scale_Dbl, Circle_DTOR, Circle_Draw, Circle_Area};
 
 void Circle_CTOR(struct Circle* _this)
 {
@@ -12,6 +12,9 @@ void Circle_CTOR(struct Circle* _this)
 	Rectangle_CTOR_int_int(&(_this->m_boundingBox), 3 * 2, 3 * 2);
 
 	printf("    [%d] Circle::CTOR(double) -> r:%f\n", ((struct Shape*)_this)->m_id, _this->m_radius); 
+
+	((struct Scaleable*)_this)->m_tbl = &tbl;
+	((struct Shape*)_this)->m_tbl = &tbl;
 	_this->m_tbl = &tbl;
 }
 
@@ -21,6 +24,9 @@ void Circle_Dbl_CTOR(struct Circle* _this, double r)
 	_this->m_radius = r;
 	Rectangle_CTOR_int_int(&(_this->m_boundingBox), r * 2, r * 2);
 	printf("    [%d] Circle::CTOR(double) -> r:%f\n", ((struct Shape*)_this)->m_id, _this->m_radius); 
+
+	((struct Scaleable*)_this)->m_tbl = &tbl;
+	((struct Shape*)_this)->m_tbl = &tbl;
 	_this->m_tbl = &tbl;	
 }
 

@@ -40,9 +40,10 @@ struct Shape
 
 struct Shape_VTbl
 {
+	void(*Scale_ptr)(struct Shape*);	
+	void(*Scale_Dbl_ptr)(struct Shape*, double);	
 	void(*DTOR_ptr)(struct Shape*);
 	void(*Draw_ptr)(struct Shape*);
-	void(*Scale_Dbl_ptr)(struct Shape*, double);
 	double(*Area_ptr)(struct Shape*);
 };
 
@@ -51,7 +52,8 @@ void Shape_cpy_CTOR(struct Shape* _this, const struct Shape* _other);
 void Shape_DTOR(struct Shape* _this);
 struct Shape* Shape_Operator_Assn(struct Shape* _this, const struct Shape* _other);
 void Shape_Draw(struct Shape* _this);
-void Shape_Scale(struct Shape* _this, double x);
+void Shape_Scale(struct Shape* _this);
+void Shape_Scale_Dbl(struct Shape* _this, double x)
 double Shape_Area(struct Shape* _this);
 void Shape_PrintInventory();
 
