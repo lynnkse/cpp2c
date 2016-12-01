@@ -26,11 +26,60 @@ void Rescale_Sclbl(struct Scaleable* sc)
 	(sc)->m_tbl->Scale_Dbl_ptr(sc, 3.14);
 }
 
+void Draw_Crcl_Glob(struct Circle c) 
+{ 
+	static int isFirst = 1;
+	static struct Circle unit;
+	if(isFirst)
+	{
+		Circle_Dbl_CTOR(&unit, 1);
+		isFirst = 0;
+	}
+	
+	unit.m_tbl->Draw_ptr(&unit);
+	c.m_tbl->Draw_ptr(&c); 
+}
+
+void Draw_Crcl_Glob_int(struct Circle* c, int scale) 
+{ 
+	static int isFirst = 1;	
+	static struct Circle unit;
+	if(scale != 0) 
+	{
+		if(isFirst)
+		{
+			Circle_Dbl_CTOR(&unit, 1);
+			isFirst = 0;
+		}					
+		unit.m_tbl->Scale_Dbl_ptr(&unit, scale);		
+		unit.m_tbl->Draw_ptr(&unit);
+	}
+	c->m_tbl->Scale_Dbl_ptr(c, scale);	
+	/*printf("COLOR: %d\n", c.GetColor()); TODO color*/
+}
+
 int main(int argc, char **argv, char **envp)
 {	
  	struct Rectangle r;
 	puts("+++ Before Rectangle s");
 	Rectangle_CTOR_int(&r, 4);
+
+	if (argc > 0) 
+	{
+		struct Circle c;
+		Circle_CTOR(&c);
+		puts("+++ Draw(c) X 2");
+		Draw_Crcl_Glob(c);
+		Draw_Crcl_Glob(c);
+		puts("+++ Draw(c, num) X 3");
+		Draw_Crcl_Glob_int(&c, 0);
+		Draw_Crcl_Glob_int(&c, 4);
+		Draw_Crcl_Glob_int(&c, 8);
+		
+		/*Report(c);
+	
+		r = c;*/
+	}
 
 	puts("+++ Draw/DrawBig(r)");
 	Draw_Shape_Glob((struct Shape*) &r);
