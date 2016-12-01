@@ -23,7 +23,6 @@ struct Circle
 	struct Circle_VTbl* m_tbl;
 };
 
-void Circle_CTOR(struct Circle* _this);
 void Circle_Dbl_CTOR(struct Circle* _this, double r);
 void Circle_DTOR(struct Circle* _this);
 void Circle_Scale_Dbl(struct Circle* _this, double x);
@@ -31,6 +30,7 @@ double Circle_Area(struct Circle* _this);
 void Circle_Draw(struct Circle* _this);
 void Circle_PrintInventory();
 enum ColorEnum Circle_GetColor_ptr(struct Circle* _this);
+struct Circle* Circle_OperatorRect(struct Circle* _this);
 
 #endif
 

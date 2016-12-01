@@ -20,7 +20,6 @@ struct Rectangle_VTbl
 	double(*Area_ptr)(struct Rectangle*);
 };
 
-void Rectangle_CTOR(struct Rectangle* _this);
 void Rectangle_CTOR_int(struct Rectangle* _this, int a);
 void Rectangle_CTOR_int_int(struct Rectangle* _this, int a, int b);
 void Rectangle_DTOR(struct Rectangle* _this);

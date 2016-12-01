@@ -19,4 +19,6 @@ void Scaleable_DTOR(struct Scaleable* _this);
 
 void Scaleable_Scale_SclblDbl(struct Scaleable*, double f);
 
+void Scaleable_Foo(struct Scaleable* _this);
+
 #endif

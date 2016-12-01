@@ -6,19 +6,6 @@
 int Circle_s_numOfShapes = 10;
 static struct Circle_VTbl tbl = {Circle_Scale_Dbl, Circle_DTOR, Circle_Draw, Circle_Area, Circle_GetColor_ptr};
 
-void Circle_CTOR(struct Circle* _this)
-{
-	Shape_CTOR((struct Shape*)_this);	
-	_this->m_radius = 3;
-	Rectangle_CTOR_int_int(&(_this->m_boundingBox), 3 * 2, 3 * 2);
-
-	printf("    [%d] Circle::CTOR(double) -> r:%f\n", ((struct Shape*)_this)->m_id, _this->m_radius); 
-
-	((struct Scaleable*)_this)->m_tbl = &tbl;
-	((struct Shape*)_this)->m_tbl = &tbl;
-	_this->m_tbl = &tbl;
-}
-
 void Circle_Dbl_CTOR(struct Circle* _this, double r)
 {
 	Shape_CTOR((struct Shape*)_this);	
@@ -68,5 +55,54 @@ enum ColorEnum Circle_GetColor_ptr(struct Circle* _this)
 {
 	return Color_DEFAULT;
 }
+
+struct Circle* Circle_OperatorRect(struct Circle* _this)
+{
+	return _this->m_boundingBox;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

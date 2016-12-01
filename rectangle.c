@@ -3,17 +3,6 @@
 
 static struct Rectangle_VTbl tbl = {Rectangle_Scale_Dbl, Rectangle_DTOR, Rectangle_Draw, Rectangle_Area};
 
-void Rectangle_CTOR(struct Rectangle* _this)
-{	
-	Shape_CTOR((struct Shape*)_this);	
-	((struct Scaleable*)_this)->m_tbl = &tbl;
-	((struct Shape*)_this)->m_tbl = &tbl;
-	_this->m_tbl = &tbl;
-	_this->m_a = 16;
-	_this->m_b = 16;
-	 printf("    [%d] Rectangle::CTOR(int) -> a:%d/%d\n", ((struct Shape*)_this)->m_id, _this->m_a, _this->m_b);
-}
-
 void Rectangle_CTOR_int(struct Rectangle* _this, int a)
 {
 	Shape_CTOR((struct Shape*)_this);	

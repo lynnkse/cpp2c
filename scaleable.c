@@ -14,3 +14,8 @@ void Scaleable_DTOR(struct Scaleable* _this)
 	_this->m_tbl = &tbl;	
 	puts("~Scaleable");
 }
+
+void Scaleable_Foo(struct Scaleable* _this)
+{
+	Scaleable_Scale_SclblDbl(_this, 2);
+}

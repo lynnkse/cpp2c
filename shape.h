@@ -2,7 +2,7 @@
 #define __Shape__
 
 #include "scaleable.h"
-/*#include "color.h"*/
+#include "color.h"
 
 extern int Shape_s_numOfShapes;
 

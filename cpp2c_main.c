@@ -92,7 +92,7 @@ int main(int argc, char **argv, char **envp)
 	if (argc > 0) 
 	{
 		struct Circle c;		
-		Circle_CTOR(&c);
+		Circle_CTOR(&c, 3);
 		puts("+++ Draw(c) X 2");
 		Draw_Crcl_Glob(c);
 		Draw_Crcl_Glob(c);

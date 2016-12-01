@@ -15,7 +15,7 @@ void Shape_CTOR(struct Shape* _this)
 	_this->m_id = Shape_s_numOfShapes;
 	_this->m_me = _this;
 	printf("    [%d] Shape::CTOR\n", _this->m_id);
-	Shape_Draw(_this);
+	//_this->m_tbl->Draw_ptr()FIXME
 }
 
 void Shape_DTOR(struct Shape* _this)
@@ -51,4 +51,44 @@ double Shape_Area(struct Shape* _this)
 {
 	return 0;
 }
+
+void Shape_Draw_Color(struct Shape* _this, enum ColorEnum c) //FIXME add to vtable
+{
+	Color_SetColor(c);
+	printf("    [%d] Shape::Draw(Color)\n", _this->m_id);
+	_this->m_tbl->Draw_ptr(_this);
+	Color_SetColor(Color_DEFAULT);
+}
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
