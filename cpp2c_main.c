@@ -3,6 +3,7 @@
 #include "shape.h"
 #include "rectangle.h"
 #include "circle.h"
+#include "color.h"
 
 void Draw_Shape_Glob(struct Shape* obj) 
 { 
@@ -55,7 +56,7 @@ void Draw_Crcl_Glob_int(struct Circle* c, int scale)
 		unit.m_tbl->Draw_ptr(&unit);
 	}
 	c->m_tbl->Scale_Dbl_ptr(c, scale);	
-	/*printf("COLOR: %d\n", c.GetColor()); TODO color*/
+	printf("COLOR: %d\n", c->m_tbl->GetColor_ptr(c));
 }
 
 void Report_Glob_Shape(struct Shape* s) 

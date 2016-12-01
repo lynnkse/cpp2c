@@ -54,7 +54,6 @@ void Rectangle_DTOR(struct Rectangle* _this)
 {
 	printf("    [%d] Rectangle::DTOR -> a:%d/%d\n", ((struct Shape*)_this)->m_id, _this->m_a, _this->m_b);
 	Shape_DTOR((struct Shape*)_this);
-	Scaleable_DTOR((struct Scaleable*)_this);
 }
 /*
 Rectangle::Rectangle(int a)

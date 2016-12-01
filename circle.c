@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include "circle.h"
 #include "shape.h"
+#include "color.h"
 
 int Circle_s_numOfShapes = 10;
-static struct Circle_VTbl tbl = {Circle_Scale, Circle_Scale_Dbl, Circle_DTOR, Circle_Draw, Circle_Area};
+static struct Circle_VTbl tbl = {Circle_Scale, Circle_Scale_Dbl, Circle_DTOR, Circle_Draw, Circle_Area, Circle_GetColor_ptr};
 
 void Circle_CTOR(struct Circle* _this)
 {
@@ -37,7 +38,6 @@ void Circle_DTOR(struct Circle* _this)
 	printf("    [%d] Circle::DTOR ->  m_radius:%f\n", ((struct Shape*)_this)->m_id, _this->m_radius); 	
 		
 	Shape_DTOR((struct Shape*)_this);
-	Scaleable_DTOR((struct Scaleable*)_this);
 }
 
 void Circle_Scale(struct Circle* _this)
@@ -65,6 +65,11 @@ void Circle_Draw(struct Circle* _this)
 void Circle_PrintInventory()
 {
 	printf("Shape::printInventory - %d\n", Circle_s_numOfShapes);
+}
+
+enum ColorEnum Circle_GetColor_ptr(struct Circle* _this)
+{
+	return Color_DEFAULT;
 }
 
 /*
