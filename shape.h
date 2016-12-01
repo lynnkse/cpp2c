@@ -4,32 +4,6 @@
 #include "scaleable.h"
 /*#include "color.h"*/
 
-/*class Shape : public Scaleable 
-{
-private:
-	static int s_numOfShapes;
-
-public:
-	Shape();
-	Shape(const Shape& other);
-	virtual ~Shape() = 0;
-
-	Shape& operator=(const Shape &_other);
-
-	virtual void Draw() const;
-	virtual void Draw(Color::ColorEnum c) const;
-	virtual void Scale(double x);
-	virtual double Area() = 0;
-
-	static void PrintInventory();
-
-protected:
-	Shape *m_me;
-	int m_id;
-
-private:
-};*/
-
 extern int Shape_s_numOfShapes;
 
 struct Shape
@@ -41,8 +15,7 @@ struct Shape
 };
 
 struct Shape_VTbl
-{
-	void(*Scale_ptr)(struct Shape*);	
+{	
 	void(*Scale_Dbl_ptr)(struct Shape*, double);	
 	void(*DTOR_ptr)(struct Shape*);
 	void(*Draw_ptr)(struct Shape*);

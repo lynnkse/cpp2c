@@ -4,7 +4,7 @@
 #include "color.h"
 
 int Circle_s_numOfShapes = 10;
-static struct Circle_VTbl tbl = {Circle_Scale, Circle_Scale_Dbl, Circle_DTOR, Circle_Draw, Circle_Area, Circle_GetColor_ptr};
+static struct Circle_VTbl tbl = {Circle_Scale_Dbl, Circle_DTOR, Circle_Draw, Circle_Area, Circle_GetColor_ptr};
 
 void Circle_CTOR(struct Circle* _this)
 {
@@ -33,17 +33,14 @@ void Circle_Dbl_CTOR(struct Circle* _this, double r)
 
 void Circle_DTOR(struct Circle* _this)
 {
+	((struct Scaleable*)_this)->m_tbl = &tbl;
+	((struct Shape*)_this)->m_tbl = &tbl;
+	_this->m_tbl = &tbl;	
 	printf("    [%d] Circle::DTOR ->  m_radius:%f\n", ((struct Shape*)_this)->m_id, _this->m_radius); 
-	Shape_Draw(((struct Shape*)_this)->m_me);
+	Shape_Draw(((struct Shape*)_this)->m_me);/*FIXME use Vtbl here*/
 	printf("    [%d] Circle::DTOR ->  m_radius:%f\n", ((struct Shape*)_this)->m_id, _this->m_radius); 	
 		
 	Shape_DTOR((struct Shape*)_this);
-}
-
-void Circle_Scale(struct Circle* _this)
-{
-	_this->m_radius *= 2.5;
-	Rectangle_Scale_Dbl(&(_this->m_boundingBox), 2.5/2);
 }
 
 void Circle_Scale_Dbl(struct Circle* _this, double x)
@@ -72,60 +69,4 @@ enum ColorEnum Circle_GetColor_ptr(struct Circle* _this)
 	return Color_DEFAULT;
 }
 
-/*
-Circle::Circle(double r)
-	: m_radius(r), m_boundingBox(r * 2, r * 2)
-{ 
-	printf("    [%d] Circle::CTOR(double) -> r:%f\n", m_id, m_radius); 
-}
-
-Circle::Circle(const Circle& other)
-	: Shape(other), m_radius(other.m_radius) 
-{ 
-	printf("    [%d] Circle::CCTOR -> m_radius:%f\n", m_id, m_radius);
-}
-
-Circle::~Circle() 
-{ 
-	printf("    [%d] Circle::DTOR ->  m_radius:%f\n", m_id, m_radius); 
-	m_me->Draw();
-	printf("    [%d] Circle::DTOR ->  m_radius:%f\n", m_id, m_radius); 
-}
-
-void Circle::Draw() const 
-{ 
-	printf("    [%d] Circle::Draw() -> m_radius:%f\n", m_id, m_radius);
-}
-
-void Circle::Scale(double f) 
-{
-	m_radius *= f;
-	m_boundingBox.Scale(f / 2);
-}
-
-double Circle::Area() 
-{
-	return m_radius * m_radius * 3.1415;	
-}
-
-double Circle::Radius() const
-{ 
-	printf("    [%d] Circle::radius()  -> m_radius:%f\n", m_id, m_radius);
-	return m_radius;
-}
-
-Color::ColorEnum Circle::GetColor() 
-{
-	return Color::DEFAULT;
-}
-
-Circle::operator Rectangle()
-{
-	return m_boundingBox;
-}
-
-void Circle::PrintInventory() 
-{
-	printf("Shape::printInventory - %d\n", Circle_s_numOfShapes);
-}*/
 

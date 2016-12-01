@@ -21,9 +21,26 @@ double DrawBig_Shape_Glob(struct Shape* obj)
 	return a1 - a0;
 }
 
+
+double Glob_DrawBig_Rect(struct Rectangle* _rect)
+{
+	double a0 = _rect->m_tbl->Area_ptr(_rect);	
+	_rect->m_tbl->Scale_Dbl_ptr(_rect, 5);
+	double a1 = _rect->m_tbl->Area_ptr(_rect);
+	return a1 - a0;
+}
+
+double Glob_DrawBig_Circle(struct Circle* _circle)
+{
+	double a0 = _circle->m_tbl->Area_ptr(_circle);	
+	_circle->m_tbl->Scale_Dbl_ptr(_circle, 5);
+	double a1 = _circle->m_tbl->Area_ptr(_circle);
+	return a1 - a0;
+}
+
 void Rescale_Sclbl(struct Scaleable* sc) 
 {
-	(sc)->m_tbl->Scale_ptr(sc);
+	(sc)->m_tbl->Scale_Dbl_ptr(sc, 2);
 	(sc)->m_tbl->Scale_Dbl_ptr(sc, 3.14);
 }
 
@@ -91,7 +108,7 @@ int main(int argc, char **argv, char **envp)
 
 	puts("+++ Draw/DrawBig(r)");
 	Draw_Shape_Glob((struct Shape*) &r);
-	DrawBig_Shape_Glob((struct Shape*) &r);
+	Glob_DrawBig_Rect(&r);
 
 	puts("+++ PrintInventory");
     Shape_PrintInventory();
@@ -103,96 +120,15 @@ int main(int argc, char **argv, char **envp)
 	puts("+++ Circle c2 Rescale");
 	Rescale_Sclbl((struct Scaleable*)&c2);
 	c2.m_tbl->Draw_ptr(&c2);
-	DrawBig_Shape_Glob((struct Shape*)&c2);
+	Glob_DrawBig_Circle(&c2);
 
 	puts("+++ Exiting Main");
 
 	r.m_tbl->DTOR_ptr(&r);
-	c.m_tbl->DTOR_ptr(&c);
+	c2.m_tbl->DTOR_ptr(&c2);
 
     return 0;
 }
 
-/*
-void Report(const Shape& s) 
-{
-	puts("-----report-----");
-	s.Draw(); 
-	Shape::PrintInventory();
-}
 
-void Draw(Circle c) 
-{ 
-	static Circle unit(1);
-	
-	unit.Draw();
-	c.Draw(); 
-}
-
-void Draw(Circle& c, int scale) 
-{ 
-	if(scale != 0) 
-	{
-		static Circle unit(1);			
-		unit.Scale(scale);
-		unit.Draw();
-	}
-	c.Scale(scale);	
-	printf("COLOR: %d\n", c.GetColor());
-}
-
-void Rescale(Scaleable *sc) {
-	sc->Scale();
-	sc->Scale(3.14);
-}
-
-template <class T>
-double DrawBig(T& shape)
-{
-	double a0 = shape.Area();
-	shape.Scale();
-	double a1 = shape.Area();
-	return a1 - a0;
-}
-
-
-
-int main(int argc, char **argv, char **envp)
-{	
-	puts("+++ Before Rectangle s");
- 	Rectangle r(4);
-
-	if (argc > 0) {
-    	Circle c;
-		puts("+++ Draw(c) X 2");
-		Draw(c);
-		Draw(c);
-		puts("+++ Draw(c, num) X 3");
-		Draw(c, 0);
-		Draw(c, 4);
-		Draw(c, 8);
-		Report(c);
-	
-		r = c;
-	}
-
-	puts("+++ Draw/DrawBig(r)");
-	Draw(r);
-	DrawBig(r);
-
-	puts("+++ PrintInventory");
-    Shape::PrintInventory();
-
-	puts("+++ Circle c2");
-    Circle c2(17);
-    c2.PrintInventory(); 
-	puts("+++ Circle c2 Rescale");
-	Rescale(&c2);
-	c2.Draw();
-	DrawBig(c2);
-
-
-	puts("+++ Exiting Main");
-    return 0;
-}*/
 
