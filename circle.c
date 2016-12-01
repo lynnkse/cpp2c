@@ -2,7 +2,7 @@
 #include "circle.h"
 #include "shape.h"
 
-static int s_numOfShapes = 10;
+int Circle_s_numOfShapes = 10;
 static struct Circle_VTbl tbl = {Circle_Scale, Circle_Scale_Dbl, Circle_DTOR, Circle_Draw, Circle_Area};
 
 void Circle_CTOR(struct Circle* _this)
@@ -56,7 +56,7 @@ void Circle_Draw(struct Circle* _this)
 
 void Circle_PrintInventory()
 {
-	printf("Shape::printInventory - %d\n", s_numOfShapes);
+	printf("Shape::printInventory - %d\n", Circle_s_numOfShapes);
 }
 
 /*
@@ -113,6 +113,6 @@ Circle::operator Rectangle()
 
 void Circle::PrintInventory() 
 {
-	printf("Shape::printInventory - %d\n", s_numOfShapes);
+	printf("Shape::printInventory - %d\n", Circle_s_numOfShapes);
 }*/
 

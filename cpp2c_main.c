@@ -6,7 +6,7 @@
 
 void Draw_Shape_Glob(struct Shape* obj) 
 { 
-	(obj)->m_tbl->Scale_Dbl_ptr(obj, 2);		
+	obj->m_tbl->Scale_Dbl_ptr(obj, 2);		
 	obj->m_tbl->Draw_ptr(obj);	
 }
 
@@ -14,8 +14,8 @@ double DrawBig_Shape_Glob(struct Shape* obj)
 {
 	double a0;
 	double a1;
-	a0 = (obj)->m_tbl->Area_ptr(obj);
-	(obj)->m_tbl->Scale_ptr(obj);	
+	a0 = obj->m_tbl->Area_ptr(obj);
+	(obj)->m_tbl->Scale_Dbl_ptr(obj, 3.14);	
 	a1 = (obj)->m_tbl->Area_ptr(obj);
 	return a1 - a0;
 }
@@ -47,7 +47,9 @@ int main(int argc, char **argv, char **envp)
 	Rescale_Sclbl((struct Scaleable*)&c2);
 	c2.m_tbl->Draw_ptr(&c2);
 	DrawBig_Shape_Glob((struct Shape*)&c2);
-	/*DrawBig(c2);*/
+
+	puts("+++ Exiting Main");
+    return 0;
 
     return 0;
 }

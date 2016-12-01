@@ -4,6 +4,8 @@
 #include "shape.h"
 #include "rectangle.h"
 
+extern int Circle_s_numOfShapes;
+
 struct Circle_VTbl
 {
 	void(*Scale_ptr)(struct Circle*);	

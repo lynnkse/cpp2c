@@ -1,18 +1,20 @@
 #include <stdio.h>
 #include "shape.h"
+#include "scaleable.h"
 /*#include "color.h"*/
 
-static int s_numOfShapes = 0;
-static struct Shape_VTbl tbl = {Shape_Scale, Shape_Scale_Dbl, Shape_DTOR, Shape_Draw, NULL};
+int Shape_s_numOfShapes = 0; /*FIXME Shape_...; add extern in .h*/
+static struct Shape_VTbl tbl = {Shape_Scale, Shape_Scale_Dbl, Shape_DTOR, Shape_Draw, 0};
 
 void Shape_CTOR(struct Shape* _this)
 {
 	Scaleable_CTOR((struct Scaleable*)_this);
-	++s_numOfShapes;	
-	_this->m_id = s_numOfShapes;
+	++Shape_s_numOfShapes;	
+	_this->m_id = Shape_s_numOfShapes;
 	_this->m_me = _this;
 	printf("    [%d] Shape::CTOR\n", _this->m_id);
 	Shape_Draw(_this);
+	((struct Scaleable*)_this)->m_tbl = &tbl;
 	_this->m_tbl = &tbl;
 }
 
@@ -20,7 +22,7 @@ void Shape_DTOR(struct Shape* _this)
 {
 	_this->m_tbl->DTOR_ptr(_this);
 	printf("    [%d] Shape::DTOR\n", _this->m_id);
-	--s_numOfShapes; 
+	--Shape_s_numOfShapes; 
 }
 
 void Shape_Draw(struct Shape* _this)
@@ -42,21 +44,21 @@ void Shape_Scale_Dbl(struct Shape* _this, double x)
 
 void Shape_PrintInventory()
 {
-	printf("Shape::printInventory - %d\n", s_numOfShapes);
+	printf("Shape::printInventory - %d\n", Shape_s_numOfShapes);
 }
 
 /*
-int Shape::s_numOfShapes = 0;
+int Shape::Shape_s_numOfShapes = 0;
 
 Shape::Shape()
-	: m_id(++s_numOfShapes), m_me(this) 
+	: m_id(++Shape_s_numOfShapes), m_me(this) 
 {
 	printf("    [%d] Shape::CTOR\n", m_id);
 	Draw();
 }
 
 Shape::Shape(const Shape& other)
-	: m_id(++s_numOfShapes), m_me(this) 
+	: m_id(++Shape_s_numOfShapes), m_me(this) 
 {
 	printf("    [%d] Shape::CCTOR from [%d]\n", m_id, other.m_id);
 	Draw();
@@ -66,7 +68,7 @@ Shape::~Shape()
 {
 	m_me->Draw();
 	printf("    [%d] Shape::DTOR\n", m_id);
-	--s_numOfShapes; 
+	--Shape_s_numOfShapes; 
 }
 
 Shape& Shape::operator=(const Shape &_other)
@@ -92,6 +94,6 @@ void Shape::Scale(double x)
 
 void Shape::PrintInventory() 
 {
-	printf("Shape::printInventory - %d\n", s_numOfShapes);
+	printf("Shape::printInventory - %d\n", Shape_s_numOfShapes);
 }*/
 

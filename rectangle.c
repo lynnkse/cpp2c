@@ -1,6 +1,6 @@
 #include "rectangle.h"
 
-static struct Rectangle_VTbl tbl = {Rectangle_Scale, Rectangle_Scale_Dbl, Rectangle_DTOR, 0, Rectangle_Area};
+static struct Rectangle_VTbl tbl = {Rectangle_Scale, Rectangle_Scale_Dbl, Rectangle_DTOR, Shape_Draw/*TODO implement its own func*/, Rectangle_Area};
 
 void Rectangle_CTOR(struct Rectangle* _this)
 {	
@@ -48,6 +48,11 @@ void Rectangle_Scale_Dbl(struct Rectangle* _this, double f)
 {
 	_this->m_a *= f;
 	_this->m_b *= f;
+}
+
+void Rectangle_DTOR(struct Rectangle* _this)
+{
+	printf("    [%d] Rectangle::DTOR -> a:%d/%d\n", ((struct Shape*)_this)->m_id, _this->m_a, _this->m_b);
 }
 /*
 Rectangle::Rectangle(int a)
