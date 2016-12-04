@@ -83,6 +83,42 @@ void Report_Glob_Shape(struct Shape* s)
 	Shape_PrintInventory();
 }
 
+void doPointerArray() 
+{
+	int i;	
+
+	struct Shape* array[] = {
+		(struct Shape*)Circle_New_Operator_Dbl(3),
+		(struct Shape*)Rectangle_New_Operator_Int(3),
+		(struct Shape*)Circle_New_Operator_Dbl(4)
+	};	
+
+    for(i = 0; i < 3; ++i) 
+		array[i]->m_tbl->Draw_ptr(array[i]);		
+
+	printf("area: %f\n", DrawBig_Shape_Glob(array[2]));
+
+    for(i = 0; i < 3; ++i) 
+	{ 
+		Shape_Delete((struct Shape*)array[i]);		
+		array[i] = 0; 
+	}
+}
+
+void doObjArray() 
+{
+	int i;	
+
+	struct Shape* objects[] = {
+		Circle_New_Operator_Dbl(3),
+		Rectangle_New_Operator_Int(4),
+		Circle_New_Operator_Dbl(9)
+	};	
+
+    for(i = 0; i < 3; ++i)
+		DrawBig_Shape_Glob((struct Shape*)objects[i]);
+}
+
 int main(int argc, char **argv, char **envp)
 {	
 	puts("+++ Before Rectangle s");
@@ -126,6 +162,30 @@ int main(int argc, char **argv, char **envp)
 
 	r.m_tbl->DTOR_ptr(&r);
 	c2.m_tbl->DTOR_ptr(&c2);
+
+	puts("+++ doPointerArray");
+	doPointerArray();
+
+	puts("+++ doObjArray");
+	doObjArray();
+
+	/*	
+
+	puts("+++ Olympics");
+    Circle olympics[5];
+	DrawBig(olympics[1]);
+
+	puts("+++ fourRectangles");
+    Rectangle *fourRectangles = new Rectangle[4];
+	DrawBig(*fourRectangles);
+	puts("+++ DeleteArray");
+    DeleteArray(fourRectangles);
+
+	puts("+++ Empty Bag");
+	EmptyBag eb;
+
+	puts("+++ Exiting Main");
+	*/
 
     return 0;
 }
