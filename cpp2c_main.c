@@ -108,15 +108,28 @@ void doPointerArray()
 void doObjArray() 
 {
 	int i;	
+	struct Circle c1;
+	struct Circle c2;
+	struct Rectangle r;
 
-	struct Shape* objects[] = {
-		Circle_New_Operator_Dbl(3),
-		Rectangle_New_Operator_Int(4),
-		Circle_New_Operator_Dbl(9)
-	};	
+	Circle_Dbl_CTOR(&c1, 3);
+	Rectangle_CTOR_int(&r, 4);
+	Circle_Dbl_CTOR(&c2, 9);
+
+	struct Shape objects[];
+	Shape_cpy_CTOR(objects + 0, (struct Shape*)&c1);
+	Shape_cpy_CTOR(objects + 1, (struct Shape*)&r);
+	Shape_cpy_CTOR(objects + 2, (struct Shape*)&c2);
+
+	Circle_DTOR(c1);
+	Circle_DTOR(c2);
+	Rectangle_DTOR(r);
 
     for(i = 0; i < 3; ++i)
-		DrawBig_Shape_Glob((struct Shape*)objects[i]);
+		DrawBig_Shape_Glob(objectsn + i);
+
+	for(i = 0; i < 3; ++i)
+		Shape_DTOR(objects + i);
 }
 
 int main(int argc, char **argv, char **envp)
