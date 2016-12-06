@@ -110,7 +110,7 @@ void Circle_Operator_Delete(struct Circle* _this)
 void Circle_Operator_Delete_Arr(struct Circle* _this)
 {
 	struct Circle* end;
-	struct Circle* orr = _this;
+	//struct Circle* orr = _this;
 	size_t* beg = (size_t*)_this;
 	if(_this)
 	{
@@ -120,7 +120,7 @@ void Circle_Operator_Delete_Arr(struct Circle* _this)
 		{
 			Circle_DTOR(_this++);
 		}
-		free(orr);
+		free(beg);
 	}
 }
 

@@ -193,7 +193,12 @@ int main(int argc, char **argv, char **envp)
 
 	puts("+++ Olympics");
 	struct Circle olympics[5];	
-	DrawBig(olympics + 1);
+	for(i = 0; i < 5; ++i)
+	{
+		Circle_Dbl_CTOR(olympics + i, 3);
+	}
+
+	Glob_DrawBig_Circle(olympics + 1);
 
 	puts("+++ fourRectangles");	
 
@@ -213,6 +218,10 @@ int main(int argc, char **argv, char **envp)
 	Rectangle_DTOR(&r);
 	Circle_DTOR(&c);
 	Circle_DTOR(&c2);
+	for(i = 0; i < 5; ++i)
+	{
+		Circle_DTOR(olympics + i);
+	}
 
     return 0;
 }

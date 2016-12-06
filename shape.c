@@ -135,7 +135,7 @@ void Shape_Delete(struct Shape* _this)
 
 void Shape_Delete_Arr(struct Shape* _this)
 {
-	struct Shape* _orr  = _this;	
+	//struct Shape* _orr  = _this;	
 	size_t* beg = (size_t*)_this;	
 	struct Shape* end;
 	if(_this)
@@ -146,7 +146,7 @@ void Shape_Delete_Arr(struct Shape* _this)
 		{
 			Shape_DTOR(_this++);
 		}
-		free(_orr);	
+		free(beg);	
 	}
 }
 

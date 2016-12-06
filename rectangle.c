@@ -132,7 +132,7 @@ void Rectangle_Delete_Operator(struct Rectangle* _this)
 
 void Rectangle_Delete_Operator_Arr(struct Rectangle* _this)
 {
-	struct Rectangle* orr = _this;
+	//struct Rectangle* orr = _this;
 	size_t* beg = (size_t*)_this;
 	struct Rectangle* end;
 	if(_this)
@@ -141,9 +141,9 @@ void Rectangle_Delete_Operator_Arr(struct Rectangle* _this)
 		struct Rectangle* end = _this + *beg;
 		while(_this != end)
 		{
-			Rectangle_DTOR(_this);
+			Rectangle_DTOR(_this++);
 		}
-		free(orr);
+		free(beg);
 	}
 }
 
