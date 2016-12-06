@@ -4,6 +4,7 @@
 #include "rectangle.h"
 #include "circle.h"
 #include "color.h"
+#include "empty.h"
 
 void Draw_Shape_Glob(struct Shape* obj) 
 { 
@@ -132,15 +133,24 @@ void doObjArray()
 		Shape_DTOR(objects + i);
 }
 
+void DeleteArray(struct Rectangle *arr)
+{
+    Rectangle_Delete_Operator_Arr(arr);
+}
+
 int main(int argc, char **argv, char **envp)
 {	
+	int i;	
+	struct Rectangle* fourRectangles;
+	struct Circle c;
+	struct Rectangle r;
+	struct Circle c2;
+	struct EmptyBag eb;
 	puts("+++ Before Rectangle s");
- 	struct Rectangle r;
 	Rectangle_CTOR_int(&r, 4);
 
 	if (argc > 0) 
-	{
-		struct Circle c;		
+	{		
 		Circle_Dbl_CTOR(&c, 3);
 		puts("+++ Draw(c) X 2");
 		Draw_Crcl_Glob(c);
@@ -163,7 +173,6 @@ int main(int argc, char **argv, char **envp)
     Shape_PrintInventory();
 
 	puts("+++ Circle c2");
-	struct Circle c2;
 	Circle_Dbl_CTOR(&c2, 17);
 	Circle_PrintInventory();
 	puts("+++ Circle c2 Rescale");
@@ -182,22 +191,34 @@ int main(int argc, char **argv, char **envp)
 	puts("+++ doObjArray");
 	doObjArray();
 
+
+	puts("+++ fourRectangles");	
+
+	fourRectangles = Rectangle_New_Operator_Int_Arr(16, 4);
+
+	Glob_DrawBig_Rect(fourRectangles);
+	puts("+++ DeleteArray");	
+	DeleteArray(fourRectangles);
+	puts("+++ Empty Bag");
+	
+	EmptyBag_CTOR(&eb);
+
+	puts("+++ Exiting Main");
+
+	EmptyEmpty_DTOR(&eb);
+	Rectangle_DTOR(&r);
+	Circle_DTOR(&c);
+	Circle_DTOR(&c2);
+
 	/*	
 
 	puts("+++ Olympics");
     Circle olympics[5];
 	DrawBig(olympics[1]);
 
-	puts("+++ fourRectangles");
-    Rectangle *fourRectangles = new Rectangle[4];
-	DrawBig(*fourRectangles);
-	puts("+++ DeleteArray");
-    DeleteArray(fourRectangles);
+   
 
-	puts("+++ Empty Bag");
-	EmptyBag eb;
-
-	puts("+++ Exiting Main");
+	
 	*/
 
     return 0;
