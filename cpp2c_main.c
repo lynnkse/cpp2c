@@ -116,17 +116,17 @@ void doObjArray()
 	Rectangle_CTOR_int(&r, 4);
 	Circle_Dbl_CTOR(&c2, 9);
 
-	struct Shape objects[];
+	struct Shape objects[3];
 	Shape_cpy_CTOR(objects + 0, (struct Shape*)&c1);
 	Shape_cpy_CTOR(objects + 1, (struct Shape*)&r);
 	Shape_cpy_CTOR(objects + 2, (struct Shape*)&c2);
 
-	Circle_DTOR(c1);
-	Circle_DTOR(c2);
-	Rectangle_DTOR(r);
+	Circle_DTOR(&c1);
+	Circle_DTOR(&c2);
+	Rectangle_DTOR(&r);
 
     for(i = 0; i < 3; ++i)
-		DrawBig_Shape_Glob(objectsn + i);
+		DrawBig_Shape_Glob(objects + i);
 
 	for(i = 0; i < 3; ++i)
 		Shape_DTOR(objects + i);
@@ -182,11 +182,13 @@ int main(int argc, char **argv, char **envp)
 	puts("+++ doObjArray");
 	doObjArray();
 
-	/*	
-
 	puts("+++ Olympics");
-    Circle olympics[5];
+	struct Circle olympics[5];	
 	DrawBig(olympics[1]);
+
+
+	/*		
+	
 
 	puts("+++ fourRectangles");
     Rectangle *fourRectangles = new Rectangle[4];
