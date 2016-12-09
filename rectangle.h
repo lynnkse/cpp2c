@@ -4,39 +4,55 @@
 #include "shape.h"
 #include "color.h"
 
+struct RectangleVtbl
+{
+	void(*scalePtrDbl)(struct Rectangle*, double);
+	void(*DTORptr)(struct Rectangle*);
+	void(*drawPtr)(struct Rectangle*);
+	void(*drawPtrColor)(struct Rectangle*, enum ColorEnum);
+	double(*areaPtr)(struct Rectangle*);
+};
+
 struct Rectangle
 {
-	struct Shape m_base;	
+	struct Shape m_base;
 	int m_a;
 	int m_b;
-	struct Rectangle_VTbl* m_tbl;
 };
 
-struct Rectangle_VTbl
+void RectangleCTORint(struct Rectangle* _this, int a);
+void RectangleCTORintInt(struct Rectangle* _this, int a, int b);
+void RectangleCpyCTOR(struct Rectangle* _this, const struct Rectangle* _other);
+void RectangleDTOR(struct Rectangle* _this);
+void RectangleDraw(struct Rectangle* _this, enum ColorEnum c);
+void RectangleScaleDbl(struct Rectangle* _this, double f);
+double RectangleArea(struct Rectangle* _this);
+
+struct Rectangle* RectangleOperatorNew();
+struct Rectangle* RectangleOperatorNewArr(size_t _numOfElements);
+
+struct Rectangle* RectangleNewOperator(int a);
+struct Rectangle* RectangleNewOperatorArr(size_t _numOfElements);
+
+void RectangleDeleteOperator(struct Rectangle* _this);
+void RectangleDeleteOperatorArr(struct Rectangle* _this);
+
+/*
+class Rectangle : public Shape 
 {
-	void(*Scale_Dbl_ptr)(struct Rectangle*, double);
-	void(*DTOR_ptr)(struct Rectangle*);
-	void(*Draw_ptr)(struct Rectangle*);
-	void(*Draw_Color_ptr)(struct Shape*);
-	double(*Area_ptr)(struct Rectangle*);
+public:
+	Rectangle(int a = 16);
+	Rectangle(int a, int b);
+	Rectangle(const Rectangle &other);
+	~Rectangle();
+
+    void Draw(Color::ColorEnum c) const;
+	void Scale(double f = 5.0) { m_a *= f; m_b *= f; }
+	double Area();
+
+private:
+	int m_a, m_b;
 };
-
-void Rectangle_CTOR_int(struct Rectangle* _this, int a);
-void Rectangle_CTOR_int_int(struct Rectangle* _this, int a, int b);
-void Rectangle_DTOR(struct Rectangle* _this);
-double Rectangle_Area(struct Rectangle* _this);
-void Rectangle_Scale_Dbl(struct Rectangle*, double f);
-void Rectangle_Draw(struct Rectangle* _this, enum ColorEnum c);
-struct Rectangle* Rectangle_New_Operator_Int(int a);
-struct Rectangle* Rectangle_New_Operator_Int_Int(int a, int b);
-struct Rectangle* Rectangle_New_Operator_Int_Arr(int a, size_t size);
-struct Rectangle* Rectangle_New_Operator_Int_Int_Arr(int a, int b, size_t size);
-void Rectangle_Operator_New_Int(struct Rectangle* _this, int a);
-void Rectangle_Operator_New_Int_Int(struct Rectangle* _this, int a, int b);
-void Rectangle_Operator_New_Int_Arr(struct Rectangle* _this, int a, size_t size);
-void Rectangle_Operator_New_Int_Int_Arr(struct Rectangle* _this, int a, int b, size_t size);
-void Rectangle_Delete_Operator(struct Rectangle* _this);
-void Rectangle_Delete_Operator_Arr(struct Rectangle* _this);
-
+*/
 #endif
 

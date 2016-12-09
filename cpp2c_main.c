@@ -3,228 +3,299 @@
 #include "shape.h"
 #include "rectangle.h"
 #include "circle.h"
-#include "color.h"
-#include "empty.h"
+//#include "empty.h"
 
-void Draw_Shape_Glob(struct Shape* obj) 
+void GlobDrawShape(struct Shape* obj) 
 { 
-	obj->m_tbl->Scale_Dbl_ptr(obj, 2);		
-	obj->m_tbl->Draw_ptr(obj);	
+	((struct ShapeVtbl*)(((struct Scaleable*)obj)->m_vtbl))->scalePtrDbl(obj, 2);
+	((struct ShapeVtbl*)(((struct Scaleable*)obj)->m_vtbl))->drawPtr(obj);
 }
 
-double DrawBig_Shape_Glob(struct Shape* obj)
-{
-	double a0;
-	double a1;
-	a0 = obj->m_tbl->Area_ptr(obj);
-	(obj)->m_tbl->Scale_Dbl_ptr(obj, 3.14);	
-	a1 = (obj)->m_tbl->Area_ptr(obj);
-	return a1 - a0;
-}
-
-
-double Glob_DrawBig_Rect(struct Rectangle* _rect)
-{
-	double a0 = _rect->m_tbl->Area_ptr(_rect);	
-	_rect->m_tbl->Scale_Dbl_ptr(_rect, 5);
-	double a1 = _rect->m_tbl->Area_ptr(_rect);
-	return a1 - a0;
-}
-
-double Glob_DrawBig_Circle(struct Circle* _circle)
-{
-	double a0 = _circle->m_tbl->Area_ptr(_circle);	
-	_circle->m_tbl->Scale_Dbl_ptr(_circle, 5);
-	double a1 = _circle->m_tbl->Area_ptr(_circle);
-	return a1 - a0;
-}
-
-void Rescale_Sclbl(struct Scaleable* sc) 
-{
-	(sc)->m_tbl->Scale_Dbl_ptr(sc, 2);
-	(sc)->m_tbl->Scale_Dbl_ptr(sc, 3.14);
-}
-
-void Draw_Crcl_Glob(struct Circle c) 
+void GlobDrawCircle(struct Circle* c) 
 { 
-	static int isFirst = 1;
+	//static Circle unit(1);
 	static struct Circle unit;
-	if(isFirst)
+	static int isSet = 0;
+	
+	if(!isSet)
 	{
-		Circle_Dbl_CTOR(&unit, 1);
-		isFirst = 0;
+		CircleCTORDbl(&unit, 1);
+		isSet = 1;
 	}
 	
-	unit.m_tbl->Draw_ptr(&unit);
-	c.m_tbl->Draw_ptr(&c); 
+	((struct CircleVtbl*)(((struct Scaleable*)&unit)->m_vtbl))->drawPtr(&unit);
+	((struct CircleVtbl*)(((struct Scaleable*)c)->m_vtbl))->drawPtr(&c);
+
+	/*FIXME DTOR in the end for static*/
 }
 
-void Draw_Crcl_Glob_int(struct Circle* c, int scale) 
+void GlobDrawCircleInt(struct Circle* c, int scale) 
 { 
-	static int isFirst = 1;	
-	static struct Circle unit;
-	if(scale != 0) 
+	if(scale != 0)
 	{
-		if(isFirst)
+		static int isSet = 0;		
+		struct Circle unit;
+		if(!isSet)
 		{
-			Circle_Dbl_CTOR(&unit, 1);
-			isFirst = 0;
-		}					
-		unit.m_tbl->Scale_Dbl_ptr(&unit, scale);		
-		unit.m_tbl->Draw_ptr(&unit);
+			CircleCTORDbl(&unit, 1);
+			isSet = 1;
+		}
+		((struct CircleVtbl*)(((struct Scaleable*)&unit)->m_vtbl))->drawPtr(&unit);
 	}
-	c->m_tbl->Scale_Dbl_ptr(c, scale);	
-	printf("COLOR: %d\n", c->m_tbl->GetColor_ptr(c));
+
+	CircleScale(c, scale);	
+	printf("COLOR: %d\n", CircleGetColor(c));
 }
 
-void Report_Glob_Shape(struct Shape* s) 
+void GlobReportShape(const struct Shape* s) 
 {
 	puts("-----report-----");
-	s->m_tbl->Draw_ptr(s);
-	Shape_PrintInventory();
+	((struct ShapeVtbl*)(((struct Scaleable*)s)->m_vtbl))->drawPtr(s);	
+	ShapePrintInventory();
+}
+
+double GlobDrawBigRect(struct Rectangle* shape)
+{
+	double a0 = ((struct RectangleVtbl*)(((struct Scaleable*)shape)->m_vtbl))->areaPtr(shape);
+	((struct RectangleVtbl*)(((struct Scaleable*)shape)->m_vtbl))->scalePtrDbl(shape, 5);
+	double a1 = ((struct RectangleVtbl*)(((struct Scaleable*)shape)->m_vtbl))->areaPtr(shape);
+	return a1 - a0;
+}
+
+double GlobDrawBigCircle(struct Circle* shape)
+{
+	double a0 = ((struct CircleVtbl*)(((struct Scaleable*)shape)->m_vtbl))->areaPtr(shape);
+	((struct CircleVtbl*)(((struct Scaleable*)shape)->m_vtbl))->scalePtrDbl(shape, 5);
+	double a1 = ((struct CircleVtbl*)(((struct Scaleable*)shape)->m_vtbl))->areaPtr(shape);
+	return a1 - a0;
+}
+
+double GlobDrawBigShape(struct Shape* shape)
+{
+	double a0 = ((struct ShapeVtbl*)(((struct Scaleable*)shape)->m_vtbl))->areaPtr(shape);
+	((struct ShapeVtbl*)(((struct Scaleable*)shape)->m_vtbl))->scalePtrDbl(shape, 5);
+	double a1 = ((struct ShapeVtbl*)(((struct Scaleable*)shape)->m_vtbl))->areaPtr(shape);
+	return a1 - a0;
+}
+
+void Rescale(struct Scaleable *sc) 
+{
+	((struct Scaleable*)sc)->m_vtbl->scalePtrDbl(sc, 2.0);
+	((struct Scaleable*)sc)->m_vtbl->scalePtrDbl(sc, 3.14);
 }
 
 void doPointerArray() 
 {
 	int i;	
-
-	struct Shape* array[] = {
-		(struct Shape*)Circle_New_Operator_Dbl(3),
-		(struct Shape*)Rectangle_New_Operator_Int(3),
-		(struct Shape*)Circle_New_Operator_Dbl(4)
-	};	
+	struct Shape* array[3];
+	array[0] = CircleNewOperator(3);
+	array[1] = RectangleNewOperator(3);
+	array[2] = CircleNewOperator(4);	
 
     for(i = 0; i < 3; ++i) 
-		array[i]->m_tbl->Draw_ptr(array[i]);		
+		((struct ShapeVtbl*)(((struct Scaleable*)array[i])->m_vtbl))->drawPtr(array[i]);
 
-	printf("area: %f\n", DrawBig_Shape_Glob(array[2]));
+	printf("area: %f\n", GlobDrawBigShape(array[2])); 
 
     for(i = 0; i < 3; ++i) 
 	{ 
-		Shape_Delete((struct Shape*)array[i]);		
+		ShapeDeleteOperator(array[i]);
 		array[i] = 0; 
 	}
 }
 
-void doObjArray() 
+/*
+void Report(const Shape& s) 
 {
-	int i;	
-	struct Circle c1;
-	struct Circle c2;
-	struct Rectangle r;
-
-	Circle_Dbl_CTOR(&c1, 3);
-	Rectangle_CTOR_int(&r, 4);
-	Circle_Dbl_CTOR(&c2, 9);
-
-	struct Shape objects[3];
-	Shape_cpy_CTOR(objects + 0, (struct Shape*)&c1);
-	Shape_cpy_CTOR(objects + 1, (struct Shape*)&r);
-	Shape_cpy_CTOR(objects + 2, (struct Shape*)&c2);
-
-	Circle_DTOR(&c1);
-	Circle_DTOR(&c2);
-	Rectangle_DTOR(&r);
-
-    for(i = 0; i < 3; ++i)
-		DrawBig_Shape_Glob(objects + i);
-
-	for(i = 0; i < 3; ++i)
-		Shape_DTOR(objects + i);
+	puts("-----report-----");
+	s.Draw(); 
+	Shape::PrintInventory();
 }
 
-void DeleteArray(struct Rectangle *arr)
-{
-    Rectangle_Delete_Operator_Arr(arr);
+inline void Draw(Shape& obj) 
+{ 
+	obj.Scale(2);
+	obj.Draw();	
 }
+
+void Draw(Circle c) 
+{ 
+	static Circle unit(1);
+	
+	unit.Draw();
+	c.Draw(); 
+}
+
+void Draw(Circle& c, int scale) 
+{ 
+	if(scale != 0) 
+	{
+		static Circle unit(1);			
+		unit.Scale(scale);
+		unit.Draw();
+	}
+	c.Scale(scale);	
+	printf("COLOR: %d\n", c.GetColor());
+}
+
+void Rescale(Scaleable *sc) {
+	sc->Scale();
+	sc->Scale(3.14);
+}
+
+template <class T>
+double DrawBig(T& shape)
+{
+	double a0 = shape.Area();
+	shape.Scale();
+	double a1 = shape.Area();
+	return a1 - a0;
+}
+
+inline double DrawBig(Shape &shape)
+{
+	double a0 = shape.Area();
+	shape.Scale(3.14);
+	double a1 = shape.Area();
+	return a1 - a0;
+}
+
+void doPointerArray() {
+	Shape *array[] = {
+	    new Circle(),
+	    new Rectangle(3),
+	    new Circle(4)
+	};
+
+    for(int i = 0; i < 3; ++i) 
+		array[i]->Draw();
+
+	printf("area: %f\n", DrawBig(*array[2]));
+
+    for(int i = 0; i < 3; ++i) { 
+		delete array[i]; 
+		array[i] = 0; 
+	}
+}
+
+void doObjArray() {
+	Shape objects[] = {
+	    Circle(),
+	    Rectangle(4),
+	    Circle(9)
+	};
+
+    for(int i = 0; i < 3; ++i)
+		DrawBig(objects[i]);
+}
+
+
+void DeleteArray(Rectangle *arr)
+{
+    delete[] arr;
+}
+*/
 
 int main(int argc, char **argv, char **envp)
-{	
-	int i;	
-	struct Rectangle* fourRectangles;
-	struct Circle c;
+{
 	struct Rectangle r;
-	struct Circle c2;
-	struct EmptyBag eb;
-	puts("+++ Before Rectangle s");
-	Rectangle_CTOR_int(&r, 4);
+	struct Circle c;
 
-	if (argc > 0) 
-	{		
-		Circle_Dbl_CTOR(&c, 3);
-		puts("+++ Draw(c) X 2");
-		Draw_Crcl_Glob(c);
-		Draw_Crcl_Glob(c);
-		puts("+++ Draw(c, num) X 3");
-		Draw_Crcl_Glob_int(&c, 0);
-		Draw_Crcl_Glob_int(&c, 4);
-		Draw_Crcl_Glob_int(&c, 8);
-		
-		Report_Glob_Shape(&c);
+	puts("+++ Before Rectangle s");
+	RectangleCTORint(&r, 4);	
 	
-		Shape_Operator_Assn(&r, &c);
+	if(argc > 0)
+	{
+		CircleCTORDbl(&c, 3);
+		puts("+++ Draw(c) X 2");
+		GlobDrawCircle(&c); 
+		GlobDrawCircle(&c); 
+		puts("+++ Draw(c, num) X 3");
+		GlobDrawCircleInt(&c, 0);
+		GlobDrawCircleInt(&c, 4);
+		GlobDrawCircleInt(&c, 8);
+		GlobReportShape((struct Shape*) &c);
+		CircleDTOR(&c);
 	}
 
 	puts("+++ Draw/DrawBig(r)");
-	Draw_Shape_Glob((struct Shape*) &r);
-	Glob_DrawBig_Rect(&r);
+	GlobDrawShape(&r); 
+	GlobDrawBigRect(&r);
 
 	puts("+++ PrintInventory");
-    Shape_PrintInventory();
+	ShapePrintInventory();
 
 	puts("+++ Circle c2");
-	Circle_Dbl_CTOR(&c2, 17);
-	Circle_PrintInventory();
+	CircleCTORDbl(&c, 17);
+	CirclePrintInventory();
 	puts("+++ Circle c2 Rescale");
-	Rescale_Sclbl((struct Scaleable*)&c2);
-	c2.m_tbl->Draw_ptr(&c2);
-	Glob_DrawBig_Circle(&c2);
+	Rescale(&c);
+	((struct CircleVtbl*)(((struct Scaleable*)&c)->m_vtbl))->drawPtr(&c);
+	GlobDrawBigCircle(&c);
 
-	puts("+++ Exiting Main");
+	puts("+++ doPointerArray");
+	void doPointerArray(); 	
 
-	r.m_tbl->DTOR_ptr(&r);
-	c2.m_tbl->DTOR_ptr(&c2);
+	//RectangleDTOR(&r);
+	return 0;
+}
+
+/*
+int main(int argc, char **argv, char **envp)
+{	
+	puts("+++ Before Rectangle s");
+ 	Rectangle r(4);
+
+	if (argc > 0) {
+    	Circle c;
+		puts("+++ Draw(c) X 2");
+		Draw(c);
+		Draw(c);
+		puts("+++ Draw(c, num) X 3");
+		Draw(c, 0);
+		Draw(c, 4);
+		Draw(c, 8);
+		Report(c);
+	
+		r = c; //TODO ???
+	}
+
+	puts("+++ Draw/DrawBig(r)");
+	Draw(r);
+	DrawBig(r);
+
+	puts("+++ PrintInventory");
+    Shape::PrintInventory();
+
+	puts("+++ Circle c2");
+    Circle c2(17);
+    c2.PrintInventory();
+	puts("+++ Circle c2 Rescale");
+	Rescale(&c2);
+	c2.Draw();
+	DrawBig(c2);
 
 	puts("+++ doPointerArray");
 	doPointerArray();
 
 	puts("+++ doObjArray");
-	doObjArray();
+    doObjArray();
+
 
 	puts("+++ Olympics");
-	struct Circle olympics[5];	
-	for(i = 0; i < 5; ++i)
-	{
-		Circle_Dbl_CTOR(olympics + i, 3);
-	}
+    Circle olympics[5];
+	DrawBig(olympics[1]);
 
-	Glob_DrawBig_Circle(olympics + 1);
-
-	puts("+++ fourRectangles");	
-
-	fourRectangles = Rectangle_New_Operator_Int_Arr(16, 4);
-
-	Glob_DrawBig_Rect(fourRectangles);
-	puts("+++ DeleteArray");	
-	DeleteArray(fourRectangles);
+	puts("+++ fourRectangles");
+    Rectangle *fourRectangles = new Rectangle[4];
+	DrawBig(*fourRectangles);
+	puts("+++ DeleteArray");
+    DeleteArray(fourRectangles);
 
 	puts("+++ Empty Bag");
-	
-	EmptyBag_CTOR(&eb);
+	EmptyBag eb;
 
 	puts("+++ Exiting Main");
-
-	EmptyEmpty_DTOR(&eb);
-	Rectangle_DTOR(&r);
-	Circle_DTOR(&c);
-	Circle_DTOR(&c2);
-	for(i = 0; i < 5; ++i)
-	{
-		Circle_DTOR(olympics + i);
-	}
-
     return 0;
 }
-
-
-
+*/

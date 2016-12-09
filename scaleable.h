@@ -3,22 +3,36 @@
 
 #include <stdio.h>
 
+struct ScaleableVtbl
+{
+	void(*scalePtrDbl)(struct Scaleable*, double);
+};
+
 struct Scaleable
 {
-	struct Scaleable_VTbl* m_tbl;
+	struct ScaleableVtbl* m_vtbl;
 };
 
-struct Scaleable_VTbl
+void ScaleableCTOR(struct Scaleable* _this);
+void ScaleableDTOR(struct Scaleable* _this);
+void PureVirtualFunctionCall();
+void ScaleableFoo(struct Scaleable* _this);
+
+/*
+class Scaleable 
 {
-	void(*Scale_Dbl_ptr)(struct Scaleable*, double f);
+public:
+	~Scaleable();
+
+	virtual void Scale(double f = 2.0) = 0;
+
+	void Foo();
 };
 
-void Scaleable_CTOR(struct Scaleable* _this);
-
-void Scaleable_DTOR(struct Scaleable* _this);
-
-void Scaleable_Scale_SclblDbl(struct Scaleable*, double f);
-
-void Scaleable_Foo(struct Scaleable* _this);
+inline Scaleable::~Scaleable()
+{
+	puts("~Scaleable");
+}*/
 
 #endif
+

@@ -1,188 +1,161 @@
 #include "rectangle.h"
-#include "color.h"
+#include "shape.h"
 
-static struct Rectangle_VTbl tbl = {Rectangle_Scale_Dbl, Rectangle_DTOR, Rectangle_Draw, Shape_Draw_Color, Rectangle_Area};
+static struct RectangleVtbl rectangleVtbl = {
+	RectangleScaleDbl,	
+	RectangleDTOR,
+	ShapeDraw,
+	ShapeDrawColor,
+	RectangleArea
+};
 
-void Rectangle_CTOR_int(struct Rectangle* _this, int a)
+void RectangleCTORint(struct Rectangle* _this, int a)
 {
-	Shape_CTOR((struct Shape*)_this);	
+	/*MIL*/
+	ShapeCTOR((struct Shape*)_this);
 	_this->m_a = a;
 	_this->m_b = a;
-	 printf("    [%d] Rectangle::CTOR(int) -> a:%d/%d\n", ((struct Shape*)_this)->m_id, _this->m_a, _this->m_b);
-	((struct Scaleable*)_this)->m_tbl = &tbl;
-	((struct Shape*)_this)->m_tbl = &tbl;
-	_this->m_tbl = &tbl;
+
+	/*body*/
+	((struct Scaleable*)_this)->m_vtbl = &rectangleVtbl;
+	printf("    [%d] Rectangle::CTOR(int) -> a:%d/%d\n", ((struct Shape*)_this)->m_id, _this->m_a, _this->m_b);
 }
 
-void Rectangle_CTOR_int_int(struct Rectangle* _this, int a, int b)
+void RectangleCTORintInt(struct Rectangle* _this, int a, int b)
 {
-	Shape_CTOR((struct Shape*)_this);	
+	/*MIL*/
+	ShapeCTOR((struct Shape*)_this);
 	_this->m_a = a;
 	_this->m_b = b;
-	 printf("    [%d] Rectangle::CTOR(int) -> a:%d/%d\n", ((struct Shape*)_this)->m_id, _this->m_a, _this->m_b);
-	_this->m_tbl = &tbl;
+	
+	/*body*/
+	((struct Scaleable*)_this)->m_vtbl = &rectangleVtbl;
+	printf("    [%d] Rectangle::CTOR(int,int) -> a:%d/%d\n", ((struct Shape*)_this)->m_id, _this->m_a, _this->m_b);
 }
 
-double Rectangle_Area(struct Rectangle* _this)
+void RectangleCpyCTOR(struct Rectangle* _this, const struct Rectangle* _other)
+{
+	/*MIL*/
+	ShapeCpyCTOR((struct Shape*)_this, (struct Shape*)_other);
+	_this->m_a = _other->m_a;
+	_this->m_b = _other->m_b;
+
+	/*body*/
+	((struct Scaleable*)_this)->m_vtbl = &rectangleVtbl; /*???*/
+	printf("    [%d] Rectangle::CCTOR -> a:%d/%d\n", ((struct Shape*)_this)->m_id, _this->m_a, _this->m_b);
+}
+
+void RectangleDTOR(struct Rectangle* _this)
+{
+	((struct Scaleable*)_this)->m_vtbl = &rectangleVtbl;	
+	printf("    [%d] Rectangle::DTOR -> a:%d/%d\n", ((struct Shape*)_this)->m_id, _this->m_a, _this->m_b);
+	ShapeCTOR((struct Shape*)_this);
+}
+
+void RectangleDraw(struct Rectangle* _this, enum ColorEnum c);
+
+void RectangleScaleDbl(struct Rectangle* _this, double f)
+{
+		_this->m_a *= f; 
+		_this->m_b *= f;
+}
+
+double RectangleArea(struct Rectangle* _this)
 {
 	return _this->m_a * _this->m_b;
 }
 
-void Rectangle_Scale_Dbl(struct Rectangle* _this, double f)
+struct Rectangle* RectangleOperatorNew()
 {
-	_this->m_a *= f;
-	_this->m_b *= f;
+	return malloc(sizeof(struct Rectangle));
 }
 
-void Rectangle_DTOR(struct Rectangle* _this)
+struct Rectangle* RectangleOperatorNewArr(size_t _numOfElements)
 {
-	((struct Scaleable*)_this)->m_tbl = &tbl;
-	((struct Shape*)_this)->m_tbl = &tbl;
-	_this->m_tbl = &tbl;
+	size_t* arr = malloc(sizeof(struct Rectangle) * _numOfElements + sizeof(size_t));
+	if(arr)
+	{	
+		*arr = _numOfElements;
+		++arr;
+	}
+	return (struct Rectangle*) arr;
+}
+
+struct Rectangle* RectangleNewOperator(int a)
+{
+	struct Rectangle* s = RectangleOperatorNew();
+	RectangleCTORint(s, a);
+	return s;
+}
+
+struct Rectangle* RectangleNewOperatorArr(size_t _numOfElements)
+{
+	struct Rectangle* arr = RectangleOperatorNewArr(_numOfElements);
 	
-	printf("    [%d] Rectangle::DTOR -> a:%d/%d\n", ((struct Shape*)_this)->m_id, _this->m_a, _this->m_b);
-	Shape_DTOR((struct Shape*)_this);
-}
+	if(!arr) 
+		return NULL;
 
-void Rectangle_Draw(struct Rectangle* _this, enum ColorEnum c)
-{
-	printf("    [%d] Rectangle::Draw(%d) -> a:%d/%d\n",  ((struct Shape*)_this)->m_id, c, _this->m_a, _this->m_b);
-}
-
-struct Rectangle* Rectangle_New_Operator_Int(int a)
-{
-	struct Rectangle* r = malloc(sizeof(struct Rectangle));
-	if(r)
+	struct Rectangle* begin = arr;
+	struct Rectangle* end = arr + _numOfElements;
+	
+	while(begin != end)
 	{
-		Rectangle_Operator_New_Int(r, a);
+		RectangleCTORint(begin++, 16);
 	}
-	return r;	
+	return arr;
 }
 
-struct Rectangle* Rectangle_New_Operator_Int_Int(int a, int b)
+void RectangleDeleteOperator(struct Rectangle* _this)
 {
-	struct Rectangle* r = malloc(sizeof(struct Rectangle));
-	if(r)
+	RectangleDTOR(_this);
+	free(_this);
+}
+
+void RectangleDeleteOperatorArr(struct Rectangle* _this)
+{
+	int i;	
+	size_t numOfElements;
+	size_t* s = (size_t*)_this;
+	--s;
+	numOfElements = *s;
+	for(i = 0; i < numOfElements; ++i)
 	{
-		Rectangle_Operator_New_Int_Int(r, a, b);
+		RectangleDTOR(_this + i);
 	}
-	return r;
+	free(s);
 }
 
-struct Rectangle* Rectangle_New_Operator_Int_Arr(int a, size_t size)
+/*
+Rectangle::Rectangle(int a)
+	: m_a(a), m_b(a) 
+{ 
+	printf("    [%d] Rectangle::CTOR(int) -> a:%d/%d\n", m_id, m_a, m_b);
+}
+
+Rectangle::Rectangle(int a, int b)
+	: m_a(a), m_b(b) 
+{ 
+	printf("    [%d] Rectangle::CTOR(int,int) -> a:%d/%d\n", m_id, m_a, m_b);
+}
+
+Rectangle::Rectangle(const Rectangle &other )
+	: Shape(other),m_a(other.m_a), m_b(other.m_b) 
+{ 
+	printf("    [%d] Rectangle::CCTOR -> a:%d/%d\n", m_id, m_a, m_b);
+}
+
+Rectangle::~Rectangle() 
+{ 
+	printf("    [%d] Rectangle::DTOR -> a:%d/%d\n", m_id, m_a, m_b);
+}
+
+void Rectangle::Draw(Color::ColorEnum c) const 
 {
-	size_t* r = malloc(sizeof(struct Rectangle) * size + sizeof(size_t));
-	if(r)
-	{
-		*r = size;
-		++r;
-		Rectangle_Operator_New_Int_Arr((struct Rectangle*)r, a, size);
-	}
-	return r;
+	printf("    [%d] Rectangle::Draw(%d) -> a:%d/%d\n",  m_id, c, m_a, m_b);
 }
 
-struct Rectangle* Rectangle_New_Operator_Int_Int_Arr(int a, int b, size_t size)
+double Rectangle::Area()
 {
-	size_t* r = malloc(sizeof(struct Rectangle) * size + sizeof(size_t));
-	if(r)
-	{
-		*r = size;
-		++r;
-		Rectangle_Operator_New_Int_Int_Arr((struct Rectangle*)r, a, b, size);
-	}
-	return r;
+	return m_a * m_b;
 }
-
-void Rectangle_Operator_New_Int(struct Rectangle* _this, int a)
-{
-	Rectangle_CTOR_int(_this, a);
-}
-
-void Rectangle_Operator_New_Int_Int(struct Rectangle* _this, int a, int b)
-{
-	Rectangle_CTOR_int_int(_this, a, b);
-}
-
-void Rectangle_Operator_New_Int_Arr(struct Rectangle* _this, int a, size_t size)
-{
-	struct Rectangle* end = _this + size;
-	while(_this != end)
-	{
-		Rectangle_CTOR_int(_this++, a);
-	}
-}
-
-void Rectangle_Operator_New_Int_Int_Arr(struct Rectangle* _this, int a, int b, size_t size)
-{
-	struct Rectangle* end = _this + size;
-	while(_this != end)
-	{
-		Rectangle_CTOR_int_int(_this++, a, b);
-	}
-}
-
-void Rectangle_Delete_Operator(struct Rectangle* _this)
-{
-	if(_this)
-	{
-		Rectangle_DTOR(_this);
-		free(_this);
-	}
-}
-
-void Rectangle_Delete_Operator_Arr(struct Rectangle* _this)
-{
-	//struct Rectangle* orr = _this;
-	size_t* beg = (size_t*)_this;
-	struct Rectangle* end;
-	if(_this)
-	{
-		--beg;
-		struct Rectangle* end = _this + *beg;
-		while(_this != end)
-		{
-			Rectangle_DTOR(_this++);
-		}
-		free(beg);
-	}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+*/

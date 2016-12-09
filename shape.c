@@ -1,181 +1,189 @@
 #include <stdio.h>
 #include "shape.h"
-#include "scaleable.h"
 #include "color.h"
-#include <stdlib.h>
+#include "scaleable.h"
 
-int Shape_s_numOfShapes = 0;
-static struct Shape_VTbl tbl = {Shape_Scale_Dbl, Shape_DTOR, Shape_Draw, Shape_Draw_Color, Shape_Area};
+int s_numOfShapes = 0;
 
-void Shape_CTOR(struct Shape* _this)
+struct ShapeVtbl shapeVtbl = {
+	ShapeScale,
+	ShapeDTOR,
+	ShapeDraw,
+	ShapeDrawColor,
+	ShapeArea
+};
+
+void ShapeCTOR(struct Shape* _this)
 {
-	Scaleable_CTOR((struct Scaleable*)_this);
-	((struct Scaleable*)_this)->m_tbl = &tbl;
-	_this->m_tbl = &tbl;
-	++Shape_s_numOfShapes;	
-	_this->m_id = Shape_s_numOfShapes;
+	/*MIL*/
+	ScaleableCTOR((struct Scaleable*)_this);
+	_this->m_id = ++s_numOfShapes;
 	_this->m_me = _this;
-	printf("    [%d] Shape::CTOR\n", _this->m_id);
-	_this->m_tbl->Draw_Color_ptr(_this, Color_RED);
-}
-
-void Shape_cpy_CTOR(struct Shape* _this, const struct Shape* _other)
-{
-	Scaleable_CTOR((struct Scaleable*)_this);
-	((struct Scaleable*)_this)->m_tbl = &tbl;
-	_this->m_tbl = &tbl;
-	++Shape_s_numOfShapes;
-	_this->m_id = Shape_s_numOfShapes;
-	_this->m_me = _this;
-	printf("    [%d] Shape::CCTOR from [%d]\n", _this->m_id, _other->m_id);
-	_this->m_tbl->Draw_ptr(_this);
-}
-
-void Shape_DTOR(struct Shape* _this)
-{
-	((struct Scaleable*)_this)->m_tbl = &tbl;
-	_this->m_tbl = &tbl;
 	
-	_this->m_tbl->Draw_ptr(_this->m_me);
-	printf("    [%d] Shape::DTOR\n", _this->m_id);
-	--Shape_s_numOfShapes; 
-	Scaleable_DTOR((struct Scaleable*)_this);
+	/*body*/
+	((struct Scaleable*)_this)->m_vtbl = &shapeVtbl;
+	printf("    [%d] Shape::CTOR\n", _this->m_id);
+	ShapeDrawColor(_this, Color_RED);
 }
 
-void Shape_Draw(struct Shape* _this)
+void ShapeCpyCTOR(struct Shape* _this, const struct Shape* _other)
+{
+	/*MIL*/
+	ScaleableCTOR((struct Scaleable*)_this);
+	_this->m_id = ++s_numOfShapes;
+	_this->m_me = _this;
+
+	/*body*/
+	((struct Scaleable*)_this)->m_vtbl = &shapeVtbl;
+	printf("    [%d] Shape::CCTOR from [%d]\n", _this->m_id, _other->m_id);
+	ShapeDraw(_this);
+}
+
+void ShapeDTOR(struct Shape* _this)
+{
+	((struct Scaleable*)_this)->m_vtbl = &shapeVtbl;
+	((struct ShapeVtbl*)(((struct Scaleable*)(_this->m_me))->m_vtbl))->drawPtr(_this->m_me);
+	printf("    [%d] Shape::DTOR\n", _this->m_id);
+	--s_numOfShapes;
+	ScaleableDTOR((struct Scaleable*)_this);
+}
+
+void ShapeDraw(struct Shape* _this)
 {
 	printf("    [%d] Shape::Draw()\n", _this->m_id);
 }
 
-void Shape_Scale_Dbl(struct Shape* _this, double x)
+void ShapeDrawColor(struct Shape* _this, enum ColorEnum color)
+{
+	ColorSetColor(color);
+	printf("    [%d] Shape::Draw(Color)\n", _this->m_id);
+	ShapeDraw(_this);
+	ColorSetColor(Color_DEFAULT);
+}
+
+void ShapePrintInventory()
+{
+	printf("Shape::printInventory - %d\n", s_numOfShapes);
+}
+
+void ShapeAssignmentOp(const struct Shape* _other)
+{}
+
+void ShapeScale(struct Shape* _this, double x)
 {
 	printf("    [%d] Shape::Scale(double)\n", _this->m_id);
 }
 
-void Shape_PrintInventory()
-{
-	printf("Shape::printInventory - %d\n", Shape_s_numOfShapes);
-}
-
-struct Shape* Shape_Operator_Assn(struct Shape* _this, const struct Shape* _other)
+double ShapeArea(struct Shape* _this)
 {}
 
-double Shape_Area(struct Shape* _this)
+struct Shape* ShapeOperatorNew()
 {
-	return 0;
+	return malloc(sizeof(struct Shape));
 }
 
-void Shape_Draw_Color(struct Shape* _this, enum ColorEnum c) 
+struct Shape* ShapeOperatorNewArr(size_t _numOfElements)
 {
-	Color_SetColor(c);
-	printf("    [%d] Shape::Draw(Color)\n", _this->m_id);
-	_this->m_tbl->Draw_ptr(_this);
-	Color_SetColor(Color_DEFAULT);
-}
-
-struct Shape* Shape_New_Operator()
-{
-	struct Shape* s = malloc(sizeof(struct Shape));
-	if(s)
-	{
-		Shape_Operator_New(s);
+	size_t* arr = malloc(sizeof(struct Shape) * _numOfElements + sizeof(size_t));
+	if(arr)
+	{	
+		*arr = _numOfElements;
+		++arr;
 	}
+	return (struct Shape*) arr;
+}
+
+struct Shape* ShapeNewOperator()
+{
+	struct Shape* s = ShapeOperatorNew();
+	ShapeCTOR(s);
 	return s;
 }
 
-
-struct Shape* Shape_New_Operator_Cpy(const struct Shape* _other)
+struct Shape* ShapeNewOperatorArr(size_t _numOfElements)
 {
-	struct Shape* s = malloc(sizeof(struct Shape));
-	if(s)
-	{
-		Shape_Operator_New_Cpy(s, _other);
-	}
-	return s;
-}
-
-struct Shape* Shape_New_Operator_Arr(size_t _size)
-{
-	size_t* s = malloc(sizeof(struct Shape) * _size + sizeof(_size));
-	if(s)
-	{
-		*s = _size;
-		Shape_Operator_New_Arr((struct Shape*)++s, _size);
-	}
-	return s;
-}
-
-void Shape_Operator_New(struct Shape* _this)
-{
-	Shape_CTOR(_this);
-}
-
-void Shape_Operator_New_Cpy(struct Shape* _this, const struct Shape* _other)
-{
-	Shape_cpy_CTOR(_this, _other);
-}
-
-void Shape_Operator_New_Arr(struct Shape* _this, size_t _size)
-{
-	struct Shape* end = _this + _size;
-	while(_this != end)
-	{
-		Shape_CTOR(_this++);
-	}
-}
+	struct Shape* arr = ShapeOperatorNewArr(_numOfElements);
 	
-void Shape_Delete(struct Shape* _this)
-{
-	if(_this)
+	if(!arr) 
+		return NULL;
+
+	struct Shape* begin = arr;
+	struct Shape* end = arr + _numOfElements;
+	
+	while(begin != end)
 	{
-		Shape_DTOR(_this);
-		free(_this);	
+		ShapeCTOR(begin++);
 	}
+	return arr;
 }
 
-void Shape_Delete_Arr(struct Shape* _this)
+void ShapeDeleteOperator(struct Shape* _this)
 {
-	//struct Shape* _orr  = _this;	
-	size_t* beg = (size_t*)_this;	
-	struct Shape* end;
-	if(_this)
-	{
-		--beg;
-		end = _this + *beg;
-		while(_this != end)
-		{
-			Shape_DTOR(_this++);
-		}
-		free(beg);	
-	}
+	ShapeDTOR(_this);
+	free(_this);
 }
 
+void ShapeDeleteOperatorArr(struct Shape* _this)
+{
+	int i;	
+	size_t numOfElements;
+	size_t* s = (size_t*)_this;
+	--s;
+	numOfElements = *s;
+	for(i = 0; i < numOfElements; ++i)
+	{
+		ShapeDTOR(_this + i);
+	}
+	free(s);
+}
 
+/*
+int Shape::s_numOfShapes = 0;
 
+Shape::Shape()
+	: m_id(++s_numOfShapes), m_me(this) 
+{
+	printf("    [%d] Shape::CTOR\n", m_id);
+	Draw(Color::RED);
+}
 
+Shape::Shape(const Shape& other)
+	: m_id(++s_numOfShapes), m_me(this) 
+{
+	printf("    [%d] Shape::CCTOR from [%d]\n", m_id, other.m_id);
+	Draw();
+}
 
+Shape::~Shape() 
+{
+	m_me->Draw();
+	printf("    [%d] Shape::DTOR\n", m_id);
+	--s_numOfShapes; 
+}
 
+Shape& Shape::operator=(const Shape &_other)
+{
+}
 
+void Shape::Draw() const 
+{
+	printf("    [%d] Shape::Draw()\n", m_id);
+}
 
+void Shape::Draw(Color::ColorEnum c) const {
+	Color::SetColor(c);
+	printf("    [%d] Shape::Draw(Color)\n", m_id);
+	Draw();
+	Color::SetColor(Color::DEFAULT);
+}
 
+void Shape::Scale(double x) 
+{
+	printf("    [%d] Shape::Scale(double)\n", m_id);
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+void Shape::PrintInventory() 
+{
+	printf("Shape::printInventory - %d\n", s_numOfShapes);
+}
+*/

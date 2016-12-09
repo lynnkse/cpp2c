@@ -1,21 +1,35 @@
-#include"scaleable.h"
+#include "scaleable.h"
+#include <stdlib.h>
+#include <stdio.h>
 
-static struct Scaleable_VTbl tbl = {Scaleable_Scale_SclblDbl};
+static struct ScaleableVtbl scaleableVtbl = {
+	PureVirtualFunctionCall
+};
 
-void Scaleable_Scale_SclblDbl(struct Scaleable* _this, double f){}
-
-void Scaleable_CTOR(struct Scaleable* _this)
+void ScaleableCTOR(struct Scaleable* _this)
 {
-	_this->m_tbl = &tbl;
+	_this->m_vtbl = &scaleableVtbl;
 }
 
-void Scaleable_DTOR(struct Scaleable* _this)
-{
-	_this->m_tbl = &tbl;	
-	puts("~Scaleable");
+void ScaleableDTOR(struct Scaleable* _this)
+{ 
+	puts("~Scaleable"); 
 }
 
-void Scaleable_Foo(struct Scaleable* _this)
+void PureVirtualFunctionCall() 
 {
-	Scaleable_Scale_SclblDbl(_this, 2);
+	puts("Pure virtual function called");
+	exit(1);
 }
+
+void ScaleableFoo(struct Scaleable* _this)
+{
+	_this->m_vtbl->scalePtrDbl(_this, 2.0);
+}
+
+/*
+void Scaleable::Foo()
+{
+	Scale();
+}
+*/

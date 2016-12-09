@@ -4,44 +4,69 @@
 #include "scaleable.h"
 #include "color.h"
 
-extern int Shape_s_numOfShapes;
+struct ShapeVtbl
+{
+	void(*scalePtrDbl)(struct Shape*, double);
+	void(*DTORptr)(struct Shape*);
+	void(*drawPtr)(struct Shape*);
+	void(*drawPtrColor)(struct Shape*, enum ColorEnum);
+	double(*areaPtr)(struct Shape*);
+};
 
 struct Shape
 {
 	struct Scaleable m_base;
 	struct Shape* m_me;
 	int m_id;
-	struct Shape_VTbl* m_tbl;
 };
 
-struct Shape_VTbl
-{	
-	void(*Scale_Dbl_ptr)(struct Shape*, double);	
-	void(*DTOR_ptr)(struct Shape*);
-	void(*Draw_ptr)(struct Shape*);
-	void(*Draw_Color_ptr)(struct Shape*, enum ColorEnum);
-	double(*Area_ptr)(struct Shape*);
+void ShapeCTOR(struct Shape* _this);
+void ShapeCpyCTOR(struct Shape* _this, const struct Shape* _other);
+void ShapeDTOR(struct Shape* _this);
+void ShapeDraw(struct Shape* _this);
+void ShapeDrawColor(struct Shape* _this, enum ColorEnum color);
+void ShapeScale(struct Shape* _this, double x);
+double ShapeArea(struct Shape* _this);
+void ShapePrintInventory();
+void ShapeAssignmentOp(const struct Shape* _other);
+
+struct Shape* ShapeOperatorNew();
+struct Shape* ShapeOperatorNewArr(size_t _numOfElements);
+
+struct Shape* ShapeNewOperator();
+struct Shape* ShapeNewOperatorArr(size_t _numOfElements);
+
+void ShapeDeleteOperator(struct Shape* _this);
+void ShapeDeleteOperatorArr(struct Shape* _this);
+
+
+/*
+class Shape : public Scaleable 
+{
+private:
+	static int s_numOfShapes;
+
+public:
+	Shape();
+	Shape(const Shape& other);
+	virtual ~Shape(); 
+
+	Shape& operator=(const Shape &_other);
+
+	virtual void Draw() const;
+	virtual void Draw(Color::ColorEnum c) const;
+	virtual void Scale(double x);
+	virtual double Area() { }
+
+	static void PrintInventory();
+
+protected:
+	Shape *m_me;
+	int m_id;
+
+private:
 };
-
-void Shape_CTOR(struct Shape* _this);
-void Shape_cpy_CTOR(struct Shape* _this, const struct Shape* _other);
-void Shape_DTOR(struct Shape* _this);
-struct Shape* Shape_Operator_Assn(struct Shape* _this, const struct Shape* _other);
-void Shape_Draw(struct Shape* _this);
-void Shape_Draw_Color(struct Shape* _this, enum ColorEnum c);
-void Shape_Scale(struct Shape* _this);
-void Shape_Scale_Dbl(struct Shape* _this, double x);
-double Shape_Area(struct Shape* _this);
-void Shape_PrintInventory();
-struct Shape* Shape_New_Operator();
-struct Shape* Shape_New_Operator_Cpy(const struct Shape* _other);
-struct Shape* Shape_New_Operator_Arr(size_t _size);
-void Shape_Operator_New(struct Shape* _this);
-void Shape_Operator_New_Cpy(struct Shape* _this, const struct Shape* _other);
-void Shape_Operator_New_Arr(struct Shape* _this, size_t _size);	
-void Shape_Delete(struct Shape* _this);
-void Shape_Delete_Arr(struct Shape* _this);
-
+*/
 
 #endif
 
