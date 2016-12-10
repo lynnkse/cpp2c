@@ -41,10 +41,10 @@ void ShapeCpyCTOR(struct Shape* _this, const struct Shape* _other)
 
 void ShapeDTOR(struct Shape* _this)
 {
-	((struct Scaleable*)_this)->m_vtbl = &shapeVtbl;
 	((struct ShapeVtbl*)(((struct Scaleable*)(_this->m_me))->m_vtbl))->drawPtr(_this->m_me);
 	printf("    [%d] Shape::DTOR\n", _this->m_id);
 	--s_numOfShapes;
+	((struct Scaleable*)_this)->m_vtbl = &scaleableVtbl;
 	ScaleableDTOR((struct Scaleable*)_this);
 }
 

@@ -27,9 +27,4 @@ void ScaleableFoo(struct Scaleable* _this)
 	_this->m_vtbl->scalePtrDbl(_this, 2.0);
 }
 
-/*
-void Scaleable::Foo()
-{
-	Scale();
-}
-*/
+

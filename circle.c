@@ -43,10 +43,10 @@ void CircleCpyCTOR(struct Circle* _this, const struct Circle* _other)
 
 void CircleDTOR(struct Circle* _this)
 {
-	((struct Scaleable*)_this)->m_vtbl = &circleVtbl;
 	printf("    [%d] Circle::DTOR ->  m_radius:%f\n", ((struct Shape*)_this)->m_id, _this->m_radius); 
 	CircleDraw(((struct Shape*)_this)->m_me);	
 	printf("    [%d] Circle::DTOR ->  m_radius:%f\n", ((struct Shape*)_this)->m_id, _this->m_radius); 
+	((struct Scaleable*)_this)->m_vtbl = &shapeVtbl;
 	ShapeDTOR((struct Shape*)_this);
 }
 
@@ -133,62 +133,4 @@ void CircleDeleteOperatorArr(struct Circle* _this)
 	free(s);
 }
 
-/*
-int Circle::s_numOfShapes = 10;
 
-Circle::Circle(double r)
-	: m_radius(r), m_boundingBox(r * 2, r * 2)
-{ 
-	printf("    [%d] Circle::CTOR(double) -> r:%f\n", m_id, m_radius); 
-}
-
-Circle::Circle(const Circle& other)
-	: Shape(other), m_radius(other.m_radius) 
-{ 
-	printf("    [%d] Circle::CCTOR -> m_radius:%f\n", m_id, m_radius);
-}
-
-Circle::~Circle() 
-{ 
-	printf("    [%d] Circle::DTOR ->  m_radius:%f\n", m_id, m_radius); 
-	m_me->Draw();
-	printf("    [%d] Circle::DTOR ->  m_radius:%f\n", m_id, m_radius); 
-}
-
-void Circle::Draw() const 
-{ 
-	printf("    [%d] Circle::Draw() -> m_radius:%f\n", m_id, m_radius);
-}
-
-void Circle::Scale(double f) 
-{
-	m_radius *= f;
-	m_boundingBox.Scale(f / 2);
-}
-
-double Circle::Area() 
-{
-	return m_radius * m_radius * 3.1415;	
-}
-
-double Circle::Radius() const
-{ 
-	printf("    [%d] Circle::radius()  -> m_radius:%f\n", m_id, m_radius);
-	return m_radius;
-}
-
-Color::ColorEnum Circle::GetColor() 
-{
-	return Color::DEFAULT;
-}
-
-Circle::operator Rectangle()
-{
-	return m_boundingBox;
-}
-
-void Circle::PrintInventory() 
-{
-	printf("Shape::printInventory - %d\n", s_numOfShapes);
-}
-*/

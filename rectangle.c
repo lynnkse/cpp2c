@@ -46,9 +46,9 @@ void RectangleCpyCTOR(struct Rectangle* _this, const struct Rectangle* _other)
 }
 
 void RectangleDTOR(struct Rectangle* _this)
-{
-	((struct Scaleable*)_this)->m_vtbl = &rectangleVtbl;	
+{	
 	printf("    [%d] Rectangle::DTOR -> a:%d/%d\n", ((struct Shape*)_this)->m_id, _this->m_a, _this->m_b);
+	((struct Scaleable*)_this)->m_vtbl = &shapeVtbl;
 	ShapeCTOR((struct Shape*)_this);
 }
 
@@ -125,37 +125,3 @@ void RectangleDeleteOperatorArr(struct Rectangle* _this)
 	free(s);
 }
 
-/*
-Rectangle::Rectangle(int a)
-	: m_a(a), m_b(a) 
-{ 
-	printf("    [%d] Rectangle::CTOR(int) -> a:%d/%d\n", m_id, m_a, m_b);
-}
-
-Rectangle::Rectangle(int a, int b)
-	: m_a(a), m_b(b) 
-{ 
-	printf("    [%d] Rectangle::CTOR(int,int) -> a:%d/%d\n", m_id, m_a, m_b);
-}
-
-Rectangle::Rectangle(const Rectangle &other )
-	: Shape(other),m_a(other.m_a), m_b(other.m_b) 
-{ 
-	printf("    [%d] Rectangle::CCTOR -> a:%d/%d\n", m_id, m_a, m_b);
-}
-
-Rectangle::~Rectangle() 
-{ 
-	printf("    [%d] Rectangle::DTOR -> a:%d/%d\n", m_id, m_a, m_b);
-}
-
-void Rectangle::Draw(Color::ColorEnum c) const 
-{
-	printf("    [%d] Rectangle::Draw(%d) -> a:%d/%d\n",  m_id, c, m_a, m_b);
-}
-
-double Rectangle::Area()
-{
-	return m_a * m_b;
-}
-*/
