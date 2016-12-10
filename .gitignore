@@ -1,2 +1,11 @@
 *~
 a.out
+~.txt
+~.gch
+~.cc
+~.o
+*.out
+*.txt
+*.gch
+*.cc
+*.o

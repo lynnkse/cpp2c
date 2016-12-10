@@ -1,22 +1,24 @@
 #ifndef __Empty__
 #define __Empty__
 
-void Empty_CTOR(struct Empty* _this) { puts("Empty()"); }
-void Empty_DTOR(struct Empty* _this) { puts("~Empty()"); }
-
 struct Empty
-{	
+{
 	char m_dummy;
 };
 
+void EmptyCTOR(struct Empty* _this) { puts("Empty()"); }
+void EmptyDTOR(struct Empty* _this) { puts("~Empty()"); }
+
 struct EmptyEmpty
 {
-	//Empty m_base; - empty class, no need here
 	int m_i;
 };
 
-void EmptyEmpty_CTOR(struct EmptyEmpty* _this) { puts("EmptyEmpty()"); }
-void EmptyEmpty_DTOR(struct EmptyEmpty* _this) {}
+void EmptyEmptyCTOR(struct EmptyEmpty* _this) 
+{ 
+	EmptyCTOR((struct Empty*) _this);	
+	puts("EmptyEmpty()"); 
+}
 
 struct EmptyBag
 {
@@ -25,9 +27,16 @@ struct EmptyBag
 	struct EmptyEmpty ee;
 };
 
-void EmptyBag_CTOR(struct EmptyBag* _this) { puts("EmptyBag"); }
+void EmptyBagCTOR(struct EmptyBag* _this)
+{
+	puts("EmptyBag");
+}
 
-/*class Empty {
+void EmptyBagDTOR(struct EmptyBag* _this)
+{}
+
+/*class Empty 
+{
 public:
     Empty() { puts("Empty()"); }
    ~Empty() { puts("~Empty()");}	
@@ -40,7 +49,6 @@ public:
 public:
 	EmptyEmpty() { puts("EmptyEmpty()"); }
 };*/
-
 /*
 class EmptyBag 
 {

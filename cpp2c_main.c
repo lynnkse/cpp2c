@@ -3,7 +3,7 @@
 #include "shape.h"
 #include "rectangle.h"
 #include "circle.h"
-//#include "empty.h"
+#include "empty.h"
 
 void GlobDrawShape(struct Shape* obj) 
 { 
@@ -104,6 +104,32 @@ void doPointerArray()
 	}
 }
 
+void doObjArray() 
+{
+	struct Circle c;
+	struct Rectangle r;
+	struct Shape objects[3];
+	int i;
+	
+	CircleCTORDbl(&c, 3);
+	ShapeCpyCTOR(objects + 0, &c);
+	
+	RectangleCTORint(&r, 4);
+	ShapeCpyCTOR(objects + 1, &r);
+
+	CircleCTORDbl(&c, 9);
+	ShapeCpyCTOR(objects + 2, &c);
+
+    for(i = 0; i < 3; ++i)
+		GlobDrawBigShape(objects + i);
+
+	for(i = 0; i < 3; ++i)
+		ShapeDTOR(objects + i);
+
+	CircleDTOR(&c);
+	RectangleDTOR(&r);
+}
+
 /*
 void Report(const Shape& s) 
 {
@@ -200,6 +226,10 @@ int main(int argc, char **argv, char **envp)
 {
 	struct Rectangle r;
 	struct Circle c;
+	struct Circle olympics[5];
+	struct EmptyBag eb;
+	struct Rectangle* fourRectangles;
+	int i;
 
 	puts("+++ Before Rectangle s");
 	RectangleCTORint(&r, 4);	
@@ -236,7 +266,38 @@ int main(int argc, char **argv, char **envp)
 	puts("+++ doPointerArray");
 	void doPointerArray(); 	
 
-	//RectangleDTOR(&r);
+	puts("+++ doObjArray");
+    doObjArray();
+
+	puts("+++ Olympics");
+    
+	for(i = 0; i < 5; ++i)
+	{
+		CircleCTORDbl(olympics + i, 3);
+	}
+
+	GlobDrawBigCircle(olympics + 1);
+
+	
+	puts("+++ fourRectangles");
+	fourRectangles = RectangleNewOperatorArr(4);
+	GlobDrawBigRect(fourRectangles);
+	puts("+++ DeleteArray");
+	RectangleDeleteOperatorArr(fourRectangles);
+
+	puts("+++ Empty Bag");
+	EmptyBagCTOR(&eb);
+
+	puts("+++ Exiting Main");
+
+	RectangleDTOR(&r);
+	CircleDTOR(&c);
+	for(i = 0; i < 5; ++i)
+	{
+		CircleDTOR(olympics + i);
+	}
+	EmptyBagDTOR(&eb);
+
 	return 0;
 }
 
